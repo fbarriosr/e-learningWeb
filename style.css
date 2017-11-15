@@ -1,0 +1,70 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: white; }
+
+button#btnSend {
+  color: white; }
+
+input#phone::placeholder, input#name::placeholder, input#lastName::placeholder, input#rut::placeholder, input#email::placeholder {
+  color: #004A98; }
+
+input#phone, input#name, input#lastName, input#rut, input#email {
+  color: #004A98; }
+
+.button {
+  background-color: #004A98;
+  color: white;
+  min-height: 50px;
+  min-width: 300px;
+  border-radius: 40px 40px 40px 40px;
+  font-size: 18px; }
+
+.button:hover, .button:focus {
+  background-color: #004A98;
+  color: white; }
+
+button.button {
+  color: black;
+  text-align: center; }
+
+.button span {
+  font-weight: 800;
+  color: white; }
+
+.row.container {
+  padding: 25px; }
+
+.textSpecial {
+  color: black;
+  font-family: OpensSans;
+  font-weight: 800;
+  font-size: 32px; }
+
+#columnsInfo {
+  margin-bottom: 20px; }
+
+/* Small only */
+@media screen and (max-width: 350px) {
+  .textSpecial {
+    color: black;
+    font-family: OpensSans;
+    font-weight: 800;
+    font-size: 28px; }
+
+  #columnsInfo {
+    margin-bottom: 10px; }
+
+  #butonCol {
+    margin-top: 20px; } }
+/* Small only */
+@media screen and (max-width: 39.9375em) {
+  #rowFillCenter {
+    background-image: url("assets/fondo.png");
+    background-size: cover;
+    opacity: 0.8; } }
+/* Medium and up */
+/* Medium only */
+/* Large and up */
+/* Large only */
+
+/*# sourceMappingURL=style.css.map */
