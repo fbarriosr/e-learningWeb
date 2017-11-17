@@ -37,9 +37,9 @@ $('#btnSend').click(function(){
         var es_mail = validateEmail(email);
 
         if (es_valido && es_mail){
-            alert('rut  y email valido');
-            //writeUserData (id,name,lastName,rut,email);
-              window.location.href = "./index2.html";
+           //alert('rut  y email valido');
+            writeUserData (id,name,lastName,rut,email);
+            window.location.href = "./index2.php";
 
         }else if (es_valido && !es_mail)
         {

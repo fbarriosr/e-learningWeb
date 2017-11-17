@@ -1,101 +1,4 @@
-<!DOCTYPE html>
-<html class="no-js" lang="en" dir="ltr">
-<head>
-  
-   <!-- 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109198007-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-109198007-1');
-    </script>
- -->
-    <link rel="apple-touch-icon" sizes="57x57" href="icons/icon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="icons/icon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="icons/icon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="icons/icon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="icons/icon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="icons/icon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="icons/icon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="icons/icon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="icons/icon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon/favicon-16x16.png">
-    <link rel="manifest" href="icons/icon/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="icons/icon/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
-
-
-    <title>Formulario Umbrella Chile</title>
-    <link rel="stylesheet" href="css/foundation-flex.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="icons/foundation-icons.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <meta http-equiv="Content-Type" content="text/xml; charset=UTF-8" />
-</head>
-<body>
-
-  
-  <div data-sticky-container  class="headermenu">
-      <div class="top-bar headermenu" data-sticky data-options="marginTop: 0" id="example-menu">
-        <div class="row">
-          <div class="columns small-12" style="">
-            <ul class="menu">
-               <img src="assets/umbrella2Logo.svg" style="max-width: 200px">
-            </ul>
-          </div>
-          
-        </div>
-      </div>
-  </div>
-
-  <div>
-      <!--  <img  src="assets/Slider3Tablet.jpg" class="show-for-small-only" style="width: 100% ">  -->
-       <img  src="assets/Slider3Desktop.jpg"  style="width: 100% "> 
-      <!--  <img  src="assets/Slider3DesktopHD.jpg" class="show-for-large" style="width: 100%">  -->
-  </div> 
-
-      <div class="row " style="height: auto;">
-          <div class="columns small-12 text-center align-self-middle " >
-              <br>
-              <img src="assets/header2.svg"  style="padding: 20px; max-height: 150px; width: auto;">
-          </div> 
-
-          <div class="columns small-12 text-center align-self-middle " >
-            
-              <img src="assets/ahumada.jpg"  style="max-height: 150px; width: auto;">
-          </div>
-        <div class="row align-self-middle" style="margin-left:0px; margin-right: 0px;width: 100% " > 
-          <div class="columns small-12 text-center " >
-              <br>
-              <img src="assets/codigo.svg"  style="padding: 20px; max-height: 300px; width: auto;">
-          </div> 
-
-          <div class="columns small-12 text-center  " >
-              <br>
-              <a href="http://www.umbrellachile.cl/">
-                <button  id="btnSend" type="button" class="button">Volver al Home</button>
-              </a>
-          </div> 
-
-           <div class="columns small-12 text-center align-self-middle " style="padding-bottom: 20px!important;">
-               <a href="#" style="color: #0E3E71; ">Descarga Bases Legales del descuento</a>
-          </div>
-
-        </div>
-      </div> 
-
-
-      <div class="footer-container">
+<div class="footer-container">
         <footer class="footer row align-justify">
             <div class="small-3 column hide-for-small-only">
                 <div class="row">
@@ -171,8 +74,15 @@
     <script src="js/vendor/what-input.js"></script>
     <script src="js/vendor/foundation.js"></script>
     <script src="js/vendor/foundation.interchange.js"></script>
+   
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/jquery.rut.chileno.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <script src="js/app.js"></script>
+
+
    
   
 
