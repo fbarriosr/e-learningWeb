@@ -38,12 +38,15 @@ $('#btnSend').click(function(){
 
         if (es_valido && es_mail){
            //alert('rut  y email valido');
-            writeUserData (id,name,lastName,rut,email);
-            window.location.href = "./index2.php";
+
+           console.log("rut  y email valido");
+          
+           writeUserData (id,name,lastName,rut,email);
+           setTimeout(dos, 2000);
 
         }else if (es_valido && !es_mail)
         {
-          alert('rut válido');
+          alert('rut válido y email inválido');
 
         }else if (!es_valido && es_mail)
         {
@@ -68,8 +71,11 @@ function writeUserData(userId, name, lastName, rut, email) {
     rut: rut,
     email: email
   });
-  
 
+}
+
+function dos(){
+    window.location.href = "index2.php";
 }
 
 function checkRut(rut) {
