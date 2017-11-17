@@ -44,9 +44,7 @@
               </a>
           </div> 
 
-           <div class="columns small-12 text-center align-self-middle " style="padding-bottom: 20px!important;">
-               <a href="#" style="color: #0E3E71; ">Descarga Bases Legales del descuento</a>
-          </div>
+           
 
         </div>
       </div> 

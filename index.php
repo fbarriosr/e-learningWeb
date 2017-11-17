@@ -39,12 +39,12 @@
 
           <div class="row" id="rowFillCenter" style="height: auto;">
             <div id="columnsInfo" class="columns small-8  small-offset-2 text-center align-self-middle"  style="height:40px;margin-top:30px;  ">  
-               <input type="text" id="name" class="middle-label" placeholder="Nombre" style="height:100%;">
+               <input type="text" id="name" class="middle-label" placeholder="Nombres" style="height:100%;">
         
             </div> 
             <div id="columnsInfo" class="columns small-8  small-offset-2 text-center align-self-middle" style="height:40px;" >     
               
-               <input type="text" id="lastName" class="middle-label" placeholder="Apellido" style="height:100%;">
+               <input type="text" id="lastName" class="middle-label" placeholder="Apellidos" style="height:100%;">
             </div> 
             <div id="columnsInfo" class="columns small-8  small-offset-2 text-center align-self-middle" style="height:40px;" >     
               
@@ -62,9 +62,7 @@
             </div>
            </div>
 
-            <div class="columns small-12 text-center align-self-middle "  style="padding-bottom: 20px!important;">
-               <a href="#" style="color: #0E3E71">Descarga Bases Legales del descuento</a>
-            </div> 
+            
      
         </div>
       </div> 
