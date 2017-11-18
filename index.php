@@ -18,7 +18,8 @@
 
   <div>
       <!--  <img  src="assets/Slider3Tablet.jpg" class="show-for-small-only" style="width: 100% ">  -->
-       <img  src="assets/Slider3Desktop.jpg"  style="width: 100% "> 
+       <img  src="assets/Slider3Desktop.jpg"  style="width: 100% " alt="Umbrella Chile, oferta y descuentos Noviembre 2017">
+
       <!--  <img  src="assets/Slider3DesktopHD.jpg" class="show-for-large" style="width: 100%">  -->
 
   </div> 

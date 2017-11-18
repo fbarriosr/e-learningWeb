@@ -36,7 +36,8 @@
 
 
     <title>Umbrella con 25% dscto en Farmacias Ahumada</title>
-    <meta name="description" content="Canjea tu 25% de dscto en Farmacias Ahumadas">
+    <meta name="description" content="Canjea tu 25% de dscto en Farmacias Ahumada">
+    <meta property="og:image" content="assets/whastapp-img.png">
     <meta name="keywords" content="Umbrella Chile, fotoprotector, protector solar, protección solar">
     <link rel="stylesheet" href="css/foundation-flex.css">
     <link rel="stylesheet" href="style.css">

@@ -7,7 +7,7 @@
         <div class="row">
           <div class="columns small-12" style="">
             <ul class="menu">
-               <img src="assets/umbrella2Logo.svg" style="max-width: 200px">
+               <img src="assets/umbrella2Logo.svg" style="max-width: 200px" alt="Umbrella Chile, oferta y descuentos Noviembre 2017">
             </ul>
           </div>
           
@@ -44,7 +44,10 @@
               </a>
           </div> 
 
-        
+        <div class="columns small-12 text-center  " >
+              <br>
+              <p> Válido hasta el 30 de Noviembre 2017 o hasta agotar stock.</p>
+          </div> 
 
         </div>
       </div> 

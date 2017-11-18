@@ -7,12 +7,12 @@
                 <div class="row footerSocial">
                     <div class="small-12 medium-4 columns align-self-middle"">
                         <a href="https://www.facebook.com/Umbrella.fotoproteccion/"> 
-                            <img src="assets/facebookLogo.svg" class="attachment-full size-full wp-post-image" alt="www.facebook.com" style="padding-bottom: 20px;"></a>
+                            <img src="assets/facebookLogo.svg" class="attachment-full size-full wp-post-image" alt="www.facebook.com" style="padding-bottom: 20px;height: 60px; width: 60px"></a>
                        
                     </div>
                     <div class="small-12 medium-8 columns align-self-middle text-align-center">
                          <a href="https://www.instagram.com/umbrella_fotoproteccion"> 
-                            <img src="assets/instagramLogo.svg" class="attachment-full size-full wp-post-image" alt="www.instagram.com" style="padding-bottom: 20px;"></a>
+                            <img src="assets/instagramLogo.svg" class="attachment-full size-full wp-post-image" alt="www.instagram.com" style="padding-bottom: 20px;height: 60px; width: 60px;"></a>
                     </div>
                 </div>
             </div>
