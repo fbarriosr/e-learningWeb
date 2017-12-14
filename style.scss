@@ -2,15 +2,14 @@ $body-background: white;
 $body-background2: #7AB4B2;
 $body-background404: #15210a;
 $header-background: white;
-$footer-background: #0E3E71;
+$footer-background: white;
 $footer-color: white;
 $titulo-pregunta: black;
 
 
 body {
-font-family: 'Open Sans', sans-serif;
+font-family: 'Lato', sans-serif;
 background-color: white;
-
 }
 
 .headermenu{
@@ -127,10 +126,7 @@ button.button  {
   }
 
 }
-/* Small only */
-@media screen and (max-width: 39.9375em) {
-headermenu sticky-container
-}
+
 
 
 /* Medium and up */

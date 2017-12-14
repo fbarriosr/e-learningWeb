@@ -1,9 +1,9 @@
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Lato', sans-serif;
   background-color: white; }
 
 .headermenu {
-  background: #0E3E71; }
+  background: white; }
 
 header {
   background: white;
@@ -15,11 +15,11 @@ header {
   background: transparent; }
 
 .footer, .footer-container {
-  background: #0E3E71;
+  background: white;
   padding: 10px; }
 
 .row.footer-container {
-  background: #0E3E71; }
+  background: white; }
 
 .footerSocial {
   padding-top: 20px; }
@@ -91,7 +91,6 @@ button.button {
 
   #butonCol {
     margin-top: 20px; } }
-/* Small only */
 /* Medium and up */
 /* Medium only */
 /* Large and up */

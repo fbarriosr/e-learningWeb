@@ -1,17 +1,28 @@
  
  var config = {
-    apiKey: "AIzaSyCHLJh92WNK-HuAupRpjWFOJT_YrUK7voY",
-    authDomain: "formularioumbrella.firebaseapp.com",
-    databaseURL: "https://formularioumbrella.firebaseio.com",
-    projectId: "formularioumbrella",
-    storageBucket: "",
-    messagingSenderId: "762083538754"
+    apiKey: "AIzaSyCc3e8WqDs22WxVlsNpMQZwab0B9my93TI",
+    authDomain: "formulariomattel.firebaseapp.com",
+    databaseURL: "https://formulariomattel.firebaseio.com",
+    projectId: "formulariomattel",
+    storageBucket: "formulariomattel.appspot.com",
+    messagingSenderId: "202007361960"
   };
   firebase.initializeApp(config);
 
 
+  $( document ).ready(function() {
+    console.log( "ready!" );
+    $('#fieldNone').hide();
+    $('#fieldGood').hide();
+    $('#fieldRutMailMalo').hide();
+    $('#fieldRutMalo').hide();
+    $('#fieldMailMalo').hide();
 
-$('#btnSend').click(function(){
+  });
+
+
+
+  $('#btnSend').click(function(){
 
 
     var name = $('#name').val();
@@ -19,7 +30,12 @@ $('#btnSend').click(function(){
     var rut = $('#rut').val();
     var email = $('#email').val();
 
-    var id = Math.floor((Math.random() * 10000000) + 1);
+    var premio1 = $('#premio1');
+    var premio2 = $('#premio2');
+    var premio3 = $('#premio3');
+    var valorPremio = "";
+
+    var id = Math.floor((Math.random() * 100000000) + 1);
 
     console.log("DATA ");
     console.log("name: ",name);
@@ -27,9 +43,27 @@ $('#btnSend').click(function(){
     console.log("rut: ",rut);
     console.log("email: ",email);
 
-    if (name == "" || lastName == "" || rut == "" || email == ""  ){
+    if (premio1.is(":checked")) {
+        console.log("Premio 1: " + "Niño");
+        valorPremio = "Niño";
+    }else if (premio2.is(":checked")) {
+        console.log("Premio:2: " + "Niña");
+        valorPremio = "Niña";
+    }else if (premio3.is(":checked")) {
+        console.log("Premio:3 " + "Juego de Mesa");
+        valorPremio = "Juego de Mesa";
+    }else {
+        console.log("No Se eligio Premio ");
+        valorPremio = "Sin Premio";
+
+    }
+
+
+    if (name == "" || lastName == "" || rut == "" || email == "" || valorPremio == "Sin Premio" ){
        console.log("vacio ");  
-       alert("Debes Completar los campos pedidos");
+      // alert("Debes Completar los campos pedidos");
+       $('#fieldNone').modal('open');
+
     }else {
         
         var aux = $.rut.formatear(rut) 
@@ -39,21 +73,30 @@ $('#btnSend').click(function(){
         if (es_valido && es_mail){
            //alert('rut  y email valido');
 
-           console.log("rut  y email valido");
+           //console.log("rut  y email valido");
           
-           writeUserData (id,name,lastName,rut,email);
-           setTimeout(dos, 2000);
+          
+           var uno = new Promise ((resolve,reject) => {
+                writeUserData (id,name,lastName,rut,email,valorPremio);
+            });
+
+           var dos = new Promise ((resolve,reject) => {
+               $('#fieldGood').modal('open');
+            });
+          
+           Promise.all([uno,dos]);
+          
 
         }else if (es_valido && !es_mail)
         {
-          alert('rut válido y email inválido');
+           $('#fieldMailMalo').modal('open');
 
         }else if (!es_valido && es_mail)
         {
-           alert('rut Invalido');
+           $('#fieldRutMalo').modal('open');
         }else if (!es_valido && !es_mail)
         {
-          alert('rut y email inválido');
+          $('#fieldRutMailMalo').modal('open');
 
         }
      
@@ -64,12 +107,13 @@ $('#btnSend').click(function(){
 });
 
 
-function writeUserData(userId, name, lastName, rut, email) {
+function writeUserData(userId, name, lastName, rut, email, premio) {
   firebase.database().ref('participantes/' + userId).set({
     name: name,
     lastname: lastName,
     rut: rut,
-    email: email
+    email: email,
+    premio: premio
   });
 
 }

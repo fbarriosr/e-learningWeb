@@ -1,41 +1,20 @@
 <?php include("header.php"); ?>
-
-
 <body>
-
-  <div data-sticky-container  class="headermenu">
-      <div class="top-bar headermenu" data-sticky data-options="marginTop: 0" id="example-menu">
-        <div class="row">
-          <div class="columns small-12" style="">
-            <ul class="menu">
-               <img src="assets/umbrella2Logo.svg" style="max-width: 200px">
-            </ul>
-          </div>
-          
-        </div>
-      </div>
-  </div>
-
   <div>
-      <!--  <img  src="assets/Slider3Tablet.jpg" class="show-for-small-only" style="width: 100% ">  -->
-       <img  src="assets/Slider3Desktop.jpg"  style="width: 100% " alt="Umbrella Chile, oferta y descuentos Noviembre 2017">
-
-      <!--  <img  src="assets/Slider3DesktopHD.jpg" class="show-for-large" style="width: 100%">  -->
-
+       <img  src="assets/slider.jpg"  style="width: 100% " alt="Umbrella Chile, oferta y descuentos Noviembre 2017">
   </div> 
-
 
       <div class="row " style="height: auto;">
 
         <div class="row align-self-middle" > 
           <div class="columns small-12 text-center align-self-middle " >
               <br>
-              <img src="assets/header.svg"  style="padding: 20px; max-height: 150px; width: auto;">
+              <h3 style="color: #005398; padding: 10px;font-family: 'Lato', sans-serif;font-weight:300"><span style="font-weight:700"></span> Ingresa tus datos <br>y participa por <span style="font-weight:700">expectaculares premios</span>.</h3>
           </div> 
 
           <div class="columns small-12 text-center align-self-middle " >
             
-              <img src="assets/ahumada.jpg"  style="max-height: 150px; width: auto;">
+              <img src="assets/mattel.png"  style="max-height: 150px; width: auto;">
           </div> 
 
           <div class="row" id="rowFillCenter" style="height: auto;">
@@ -44,27 +23,50 @@
         
             </div> 
             <div id="columnsInfo" class="columns small-8  small-offset-2 text-center align-self-middle" style="height:40px;" >     
-              
                <input type="text" id="lastName" class="middle-label" placeholder="Apellidos" style="height:100%;">
             </div> 
             <div id="columnsInfo" class="columns small-8  small-offset-2 text-center align-self-middle" style="height:40px;" >     
-              
-               <!-- <input type="text" id="rut" required oninput="checkRut(this)" class="middle-label" placeholder="Rut" style="height:100%;"> -->
                 <input type="text" id="rut"  class="middle-label input_rut"  placeholder="Rut"  style="height:100%;">
             </div> 
             <div id="columnsInfo" class="columns small-8  small-offset-2 text-center align-self-middle"  style="height:40px; ">  
                <input type="email" id="email" class="middle-label" placeholder="E-mail" style="height:100%;">
         
             </div> 
+            <div id="columnsInfo" class="columns small-8  small-offset-2 text-center align-self-middle"  style="height:150px; ">  
+            <fieldset class="fieldset" style="color:#005398; ">
+              <legend>Elige tu Premio</legend>
+              <input type="radio" name="pokemon" value="Red" id="premio1" required><label for="premio1" style="color: #005398;" >Niño</label>
+              <input type="radio" name="pokemon" value="Blue" id="premio2"><label for="premio2" style="color: #005398;" >Niña</label>
+              <input type="radio" name="pokemon" value="Yellow" id="premio3"><label for="premio3" style="color: #005398;" >Juego de Mesa</label>
+ 
+            </fieldset>
+             </div> 
 
             <div id="butonCol" class="columns small-12  text-center align-self-middle" style="margin-bottom: 20px;" >  
-                 <button  id="btnSend" type="button" class="button"> Enviar</button>
+                 <button  id="btnSend" type="button" class="button" style="width: 120px; font-size:22px;  font-family: 'Open Sans', sans-serif;font-weight: bolder ;height: 66px;border-radius: 10px; border: none; color: white; background: #E99C51;"> Enviar</button>
         
             </div>
            </div>
 
-            
-     
+            <div id="fieldNone" class="modal">
+              <p style="text-align: center;">Estimado Debes Ingresar Todos los Campos.</p>
+            </div>
+
+            <div id="fieldGood" class="modal">
+              <p >Gracias por Participar.</p>
+            </div>
+
+            <div id="fieldRutMalo" class="modal">
+              <p >Ingrese un rut válido</p>
+            </div>
+
+            <div id="fieldMailMalo" class="modal">
+              <p >Ingrese un mail válido.</p>
+            </div>
+            <div id="fieldRutMailMalo" class="modal">
+              <p >Ingrese un rut y un mail válidos</p>
+            </div>
+
         </div>
       </div> 
 

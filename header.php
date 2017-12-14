@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" dir="ltr">
 <head>
-  
-     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109869886-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-109869886-1');
-    </script> 
-
     <link rel="apple-touch-icon" sizes="57x57" href="icons/icon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="icons/icon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="icons/icon/apple-icon-72x72.png">
@@ -35,13 +24,26 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 
 
-    <title>Umbrella con 25% dscto en Farmacias Ahumada</title>
+    <title>Mattel Navidad La Araucana</title>
     <meta name="description" content="Canjea tu 25% de dscto en Farmacias Ahumada">
-    <meta property="og:image" content="http://www.umbrellachile.cl/ofertasydescuentos/assets/whastapp-img.png">
+    <meta property="og:image" content="http://www.beneficioslaaraucana.cl/mattelNavidad/assets/redessociales.png">
     <meta name="keywords" content="Umbrella Chile, fotoprotector, protector solar, protección solar">
     <link rel="stylesheet" href="css/foundation-flex.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="icons/foundation-icons.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
     <meta http-equiv="Content-Type" content="text/xml; charset=UTF-8" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111129694-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-111129694-1');
+    </script>
+
+
+
 </head>
