@@ -37,8 +37,6 @@
               <legend>Elige tu Premio</legend>
               <input type="radio" name="pokemon" value="Red" id="premio1" required><label for="premio1" style="color: #005398;" >Niño</label>
               <input type="radio" name="pokemon" value="Blue" id="premio2"><label for="premio2" style="color: #005398;" >Niña</label>
-              <input type="radio" name="pokemon" value="Yellow" id="premio3"><label for="premio3" style="color: #005398;" >Juego de Mesa</label>
- 
             </fieldset>
              </div> 
 

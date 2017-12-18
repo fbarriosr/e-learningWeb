@@ -32,7 +32,6 @@
 
     var premio1 = $('#premio1');
     var premio2 = $('#premio2');
-    var premio3 = $('#premio3');
     var valorPremio = "";
 
     var id = Math.floor((Math.random() * 100000000) + 1);
@@ -49,9 +48,6 @@
     }else if (premio2.is(":checked")) {
         console.log("Premio:2: " + "Niña");
         valorPremio = "Niña";
-    }else if (premio3.is(":checked")) {
-        console.log("Premio:3 " + "Juego de Mesa");
-        valorPremio = "Juego de Mesa";
     }else {
         console.log("No Se eligio Premio ");
         valorPremio = "Sin Premio";
