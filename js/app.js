@@ -1,13 +1,58 @@
  
- var config = {
-    apiKey: "AIzaSyCc3e8WqDs22WxVlsNpMQZwab0B9my93TI",
-    authDomain: "formulariomattel.firebaseapp.com",
-    databaseURL: "https://formulariomattel.firebaseio.com",
-    projectId: "formulariomattel",
-    storageBucket: "formulariomattel.appspot.com",
-    messagingSenderId: "202007361960"
+  var config = {
+    apiKey: "AIzaSyBtIwxxhd-VUEdje1Q8FhHkhWc3-ihsmUQ",
+    authDomain: "fotogramashow.firebaseapp.com",
+    databaseURL: "https://fotogramashow.firebaseio.com",
+    projectId: "fotogramashow",
+    storageBucket: "fotogramashow.appspot.com",
+    messagingSenderId: "454182483820"
   };
   firebase.initializeApp(config);
+
+ // Get a reference to the storage service, which is used to create references in your storage bucket
+  var storage = firebase.storage();
+
+  var uploader = document.getElementById('uploader');
+  var fileButton = document.getElementById('exampleFileUpload');
+
+  // Listen for file selection
+
+  fileButton.addEventListener('change', function(e){
+
+    // get file
+
+    var file = e.target.files[0];
+
+    var nameRand = Math.floor((Math.random() * 100000000) + 1);
+    // create a storage ref
+
+    var storageRef = firebase.storage().ref('ConcursoFotosVerano2018/' + nameRand+'_'+file.name );
+
+    // upload file
+
+    var task = storageRef.put(file);
+
+    task.on('state_changed',
+
+        function progress(snapshot){
+            var porcentaje = (snapshot.bytesTransferred/snapshot.totalBytes ) * 100;
+            uploader.value = porcentaje;
+        },
+
+        function error(err){
+
+        },
+
+        function complete(){
+            var downloadURL = task.snapshot.downloadURL;
+
+            console.log('url:', downloadURL);
+
+        }
+    );
+
+  });
+
 
 
   $( document ).ready(function() {
@@ -30,10 +75,6 @@
     var rut = $('#rut').val();
     var email = $('#email').val();
 
-    var premio1 = $('#premio1');
-    var premio2 = $('#premio2');
-    var valorPremio = "";
-
     var id = Math.floor((Math.random() * 100000000) + 1);
 
     console.log("DATA ");
@@ -42,20 +83,8 @@
     console.log("rut: ",rut);
     console.log("email: ",email);
 
-    if (premio1.is(":checked")) {
-        console.log("Premio 1: " + "Niño");
-        valorPremio = "Niño";
-    }else if (premio2.is(":checked")) {
-        console.log("Premio:2: " + "Niña");
-        valorPremio = "Niña";
-    }else {
-        console.log("No Se eligio Premio ");
-        valorPremio = "Sin Premio";
 
-    }
-
-
-    if (name == "" || lastName == "" || rut == "" || email == "" || valorPremio == "Sin Premio" ){
+    if (name == "" || lastName == "" || rut == "" || email == ""  ){
        console.log("vacio ");  
       // alert("Debes Completar los campos pedidos");
        $('#fieldNone').modal('open');
@@ -73,7 +102,7 @@
           
           
            var uno = new Promise ((resolve,reject) => {
-                writeUserData (id,name,lastName,rut,email,valorPremio);
+                writeUserData (id,name,lastName,rut,email);
             });
 
            var dos = new Promise ((resolve,reject) => {
@@ -103,13 +132,12 @@
 });
 
 
-function writeUserData(userId, name, lastName, rut, email, premio) {
+function writeUserData(userId, name, lastName, rut, email) {
   firebase.database().ref('participantes/' + userId).set({
     name: name,
     lastname: lastName,
     rut: rut,
-    email: email,
-    premio: premio
+    email: email
   });
 
 }

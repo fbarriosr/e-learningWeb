@@ -5,6 +5,12 @@ body {
 .headermenu {
   background: white; }
 
+#uploader {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 50%;
+  margin-bottom: 10px; }
+
 header {
   background: white;
   height: 120px;
@@ -51,7 +57,7 @@ input#phone, input#name, input#lastName, input#rut, input#email {
   color: white;
   min-height: 50px;
   min-width: 300px;
-  border-radius: 40px 40px 40px 40px;
+  border-radius: 10px 10px 10px 10px;
   font-size: 18px; }
 
 .button:hover, .button:focus {

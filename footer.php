@@ -2,7 +2,7 @@
         <footer class="footer row align-justify">
             <div class="small-12 column"> 
                 <div class="row">
-                    <ul style="list-style: none; padding: 0px;">
+                    <ul style="list-style: none; padding: 0px;font-family: 'Lato', sans-serif;">
                   <li style="font-size:11px; text-align:justify; color: #00539b; ">Beneficios válidos para trabajadores y pensionados  afiliados y cargas familiares legales.</li>
                   <li style="font-size:11px; text-align:justify; color: #00539b; ">Descuentos no válidos ni acumulables con promociones.</li>
                   <li style="font-size:11px; text-align:justify; color: #00539b; " >Las Cajas de Compensación son fiscalizadas por la Superintendencia de Seguridad Social <a href="http://www.suseso.cl" target="_blank">(www.suseso.cl)</a></li>
