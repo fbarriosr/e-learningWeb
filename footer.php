@@ -1,4 +1,4 @@
-<div class="footer-container">
+<!-- <div class="footer-container">
         <footer class="footer row align-justify">
             <div class="small-12 column"> 
                 <div class="row">
@@ -10,7 +10,7 @@
                 </div>
             </div>
         </footer>
-    </div>
+    </div> -->
 
  
     <script src="js/vendor/jquery.js"></script>

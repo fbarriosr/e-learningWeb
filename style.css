@@ -9,7 +9,14 @@ body {
   -webkit-appearance: none;
   appearance: none;
   width: 50%;
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+  background-color: #DA8A2B; }
+
+h3 {
+  background-image: url("assets/start1@2x.png"), url("assets/start2@2x.png");
+  background-position: left , right;
+  background-repeat: no-repeat, no-repeat;
+  margin: 10px; }
 
 header {
   background: white;
@@ -40,28 +47,59 @@ header {
   font-size: 10px;
   margin-bottom: 0px; }
 
-button#btnSend {
-  color: white; }
-
 .top-bar, .top-bar ul {
   background-color: transparent; }
 
 input#phone::placeholder, input#name::placeholder, input#lastName::placeholder, input#rut::placeholder, input#email::placeholder {
-  color: #004A98; }
+  border-color: #3F8094;
+  color: #DA8A2B; }
 
 input#phone, input#name, input#lastName, input#rut, input#email {
-  color: #004A98; }
+  border-color: #3F8094;
+  color: #DA8A2B;
+  border-radius: 10px;
+  text-align: center; }
+
+#divCenter {
+  width: 100%; }
 
 .button {
-  background-color: #004A98;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#95c5d4+0,3f8094+100 */
+  background: #95c5d4;
+  /* Old browsers */
+  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzk1YzVkNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzZjgwOTQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  background: -moz-linear-gradient(top, #95c5d4 0%, #3f8094 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #95c5d4 0%, #3f8094 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #95c5d4 0%, #3f8094 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#95c5d4', endColorstr='#3f8094',GradientType=0 );
+  /* IE6-8 */
   color: white;
-  min-height: 50px;
-  min-width: 300px;
+  min-width: 250px;
+  min-height: 45px;
   border-radius: 10px 10px 10px 10px;
-  font-size: 18px; }
+  font-size: 18px;
+  text-transform: uppercase;
+  border: 0px;
+  margin: 20px; }
 
 .button:hover, .button:focus {
-  background-color: #004A98;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#95c5d4+0,3f8094+100 */
+  background: #95c5d4;
+  /* Old browsers */
+  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzk1YzVkNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzZjgwOTQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  background: -moz-linear-gradient(top, #95c5d4 0%, #3f8094 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #95c5d4 0%, #3f8094 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #95c5d4 0%, #3f8094 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#95c5d4', endColorstr='#3f8094',GradientType=0 );
+  /* IE6-8 */
   color: white; }
 
 button.button {
@@ -84,19 +122,108 @@ button.button {
 #columnsInfo {
   margin-bottom: 20px; }
 
-/* Small only */
-@media screen and (max-width: 350px) {
+/* ------- HERNAN -------- */
+
+input#phone ,input#name , input#lastName, input#rut, input#email {
+  border: 2px solid #3F8094;
+    color: #DA8A2B;
+    border-radius: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 21px;
+}
+
+h3 {
+    background-image: url(assets/start1@2x.png), url(assets/start2@2x.png);
+    background-position: left , right;
+    background-repeat: no-repeat, no-repeat;
+    margin: 10px;
+    border-bottom: 2px solid #3F8094;
+}
+
+[type='text'] { color:#3F8094!important; } 
+input#email { color:#3F8094!important; } 
+
+progress {
+  display: block; /* default: inline-block */
+  width: 300px;
+  margin: 1em auto!important;
+  padding: 2px;
+  border: 0 none;
+  background: #3F8094!important;
+  border-radius: 14px;
+  box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+}
+progress::-moz-progress-bar {
+  border-radius: 12px;
+  background: #FFF;
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4), 0 2px 5px 0px rgba(0,0,0,0.3);
+  
+}
+/* webkit */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  progress {
+    height: 14px;
+  }
+}
+progress::-webkit-progress-bar {
+    background: transparent;
+}  
+progress::-webkit-progress-value {  
+  border-radius: 12px;
+  background: #FFF;
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4), 0 2px 5px 0px rgba(0,0,0,0.3); 
+} 
+
+
+
+@media only screen and (max-device-width: 480px) and (min-device-width: 320px)
+{
+h3, h5 {
+    font-size: 20px!important;
+    margin-left: 0px;
+    text-shadow: -3px 0 white, 0 3px white, 3px 0 white, 0 -3px white;
+    background-image: none;
+}
+}
+
+@media only screen and (max-device-width: 480px) and (min-device-width: 320px){
+#butonCol {
+    margin-top: 0px!important;
+}
+}
+
+
+
+
+
+/* ------- FIN HERNAN -------- */
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
   .textSpecial {
     color: black;
     font-family: OpensSans;
     font-weight: 800;
     font-size: 28px; }
 
-  #columnsInfo {
-    margin-bottom: 10px; }
-
   #butonCol {
-    margin-top: 20px; } }
+    margin-top: 30px; }
+
+  #divCenter {
+    width: auto; }
+
+  h3, h5 {
+    font-size: 12px;
+    margin-left: 0px; }
+
+  #divCenterH3 {
+    margin-left: 0px; }
+
+  .button {
+    margin: 10px; } }
+@media only screen and (min-device-width: 414px) and (max-device-width: 736px) and (orientation: portrait) {
+  #buttonFotosInside {
+    width: 346px; } }
 /* Medium and up */
 /* Medium only */
 /* Large and up */

@@ -10,10 +10,18 @@
   firebase.initializeApp(config);
 
  // Get a reference to the storage service, which is used to create references in your storage bucket
-  var storage = firebase.storage();
+
+
+  var imagesFBRef = firebase.database().ref().child('registroConcursante');
 
   var uploader = document.getElementById('uploader');
   var fileButton = document.getElementById('exampleFileUpload');
+
+  var imagenName = "";
+  var downloadURL ="";
+
+
+
 
   // Listen for file selection
 
@@ -24,9 +32,11 @@
     var file = e.target.files[0];
 
     var nameRand = Math.floor((Math.random() * 100000000) + 1);
+
+    imagenName = nameRand+'_'+file.name;
     // create a storage ref
 
-    var storageRef = firebase.storage().ref('ConcursoFotosVerano2018/' + nameRand+'_'+file.name );
+    var storageRef = firebase.storage().ref('ConcursoFotosVerano2018/' + imagenName);
 
     // upload file
 
@@ -44,10 +54,9 @@
         },
 
         function complete(){
-            var downloadURL = task.snapshot.downloadURL;
-
-            console.log('url:', downloadURL);
-
+            downloadURL = task.snapshot.downloadURL;
+            $('#pagina2').show();
+            $('#pagina1').hide();
         }
     );
 
@@ -55,7 +64,7 @@
 
 
 
-  $( document ).ready(function() {
+$( document ).ready(function() {
     console.log( "ready!" );
     $('#fieldNone').hide();
     $('#fieldGood').hide();
@@ -63,12 +72,18 @@
     $('#fieldRutMalo').hide();
     $('#fieldMailMalo').hide();
 
-  });
+    $('#pagina1').show();
+    $('#pagina2').hide();
+});
 
 
+$('#fieldGood').find('#close-modal').click(function(event){
+    event.preventDefault();
+    location.reload();
+    console.log('hola');
+});
 
-  $('#btnSend').click(function(){
-
+$('#btnSend').click(function(){
 
     var name = $('#name').val();
     var lastName = $('#lastName').val();  
@@ -102,7 +117,7 @@
           
           
            var uno = new Promise ((resolve,reject) => {
-                writeUserData (id,name,lastName,rut,email);
+                guardarInfoImagenes(name, lastName,rut,email,imagenName,downloadURL)
             });
 
            var dos = new Promise ((resolve,reject) => {
@@ -132,19 +147,7 @@
 });
 
 
-function writeUserData(userId, name, lastName, rut, email) {
-  firebase.database().ref('participantes/' + userId).set({
-    name: name,
-    lastname: lastName,
-    rut: rut,
-    email: email
-  });
 
-}
-
-function dos(){
-    window.location.href = "index2.php";
-}
 
 function checkRut(rut) {
     // Despejar Puntos
@@ -194,9 +197,29 @@ function checkRut(rut) {
     rut.setCustomValidity('');
     return true;
 }
- function validateEmail($email) {
+
+function validateEmail($email) {
   var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
   return emailReg.test( $email );
 }
+
+function guardarInfoImagenes(name, lastName,rut,email,imagenName,downloadURL){ 
+    imagesFBRef.push({
+    name: name,
+    lastName: lastName,
+    rut: rut,
+    email: email,
+    nameImagen: imagenName,
+    urlImagen: downloadURL,
+    v: "false",
+    v_notP: "false",
+    v_p_notW: "false",
+    v_p_w: "false"
+    }
+  );
+}
+
+
+
 
 

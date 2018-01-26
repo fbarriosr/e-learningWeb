@@ -24,8 +24,8 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 
 
-    <title>Mattel Navidad La Araucana</title>
-    <meta name="description" content="Canjea tu 25% de dscto en Farmacias Ahumada">
+    <title>Concurso Bienestar La Araucana</title>
+    <meta name="description" content="Concurso Fotografico La Araucana">
     <meta property="og:image" content="http://www.beneficioslaaraucana.cl/mattelNavidad/assets/redessociales.png">
     <meta name="keywords" content="Umbrella Chile, fotoprotector, protector solar, protección solar">
     <link rel="stylesheet" href="css/foundation-flex.css">
