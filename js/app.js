@@ -20,7 +20,7 @@
   var imagenName = "";
   var downloadURL ="";
 
-
+  var envio = false;
 
 
   // Listen for file selection
@@ -121,6 +121,7 @@ $('#btnSend').click(function(){
             });
 
            var dos = new Promise ((resolve,reject) => {
+               envio = true;
                $('#fieldGood').modal('open');
             });
           
@@ -146,6 +147,12 @@ $('#btnSend').click(function(){
 
 });
 
+$(document).on($.modal.CLOSE,function(){
+ console.log('cerrar modal');
+ if (envio) {
+    location.reload(true);
+ }
+})
 
 
 

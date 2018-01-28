@@ -55,7 +55,8 @@
 
             <div id="fieldGood" class="modal">
                   <p style="font-weight: bolder; text-align: center;">Gracias por Participar. <br></p>
-                  <p style="font-weight: bolder; text-align: center;">Mira las Fotos en el <a href="https://www.google.cl/" target="_blank">Sitio</a></p>
+                   <p style="font-weight: bolder; text-align: center;">Tu foto será revisada antes de publicarse. <br></p>
+                  <p style="font-weight: bolder; text-align: center;">Mira las Fotos que están participan en el <a href="https://www.google.cl/" target="_blank">Sitio</a></p>
             </div>
 
             <div id="fieldRutMalo" class="modal">
