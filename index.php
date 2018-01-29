@@ -24,6 +24,12 @@
             <div id="columnsInfo" class="columns small-12  text-center align-self-middle"  style="height: auto; width: 100% ">  
                 <progress value="0" max="100" id="uploader">0% </progress>
             </div> 
+            <div id="divCenterH3" class="columns small-12 text-center align-self-middle " style="height: auto; width: 100%" >
+                <br>
+                <a href="bases.php">
+                  <h6 style="color: #EE9319; padding: 10px;font-family: 'Lato', sans-serif;font-weight:700; text-transform: uppercase;"><span style="font-weight:400"></span> Bases del Concurso </h6>
+                </a>
+            </div> 
         </div>
         <div id="pagina2">   
             <div id="divCenterH3" class="columns small-12 text-center align-self-middle " style="height: auto; width: 100%" >
@@ -56,7 +62,7 @@
             <div id="fieldGood" class="modal">
                   <p style="font-weight: bolder; text-align: center;">Gracias por Participar. <br></p>
                    <p style="font-weight: bolder; text-align: center;">Tu foto será revisada antes de publicarse. <br></p>
-                  <p style="font-weight: bolder; text-align: center;">Mira las Fotos que están participan en el <a href="https://www.google.cl/" target="_blank">Sitio</a></p>
+                  <p style="font-weight: bolder; text-align: center;">Mira las Fotos que están participan en el <a href="http://concursos.beneficioslaaraucana.cl/galleriaVerano2018/" target="_blank">Sitio</a></p>
             </div>
 
             <div id="fieldRutMalo" class="modal">
