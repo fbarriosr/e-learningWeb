@@ -13,13 +13,13 @@
        <div class="callout secondary" style="border: 0px;">
         <div class="row">
           <div class="columns small-6 " style=" text-align: left;">
-          <img src="assets/logoBienestar.png" style="max-width: 300px">
-        </div>
+            <img src="assets/logoBienestar.png" style="max-width: 300px">
+          </div>
 
-        <div class="columns small-6 "  style=" text-align: right;">
-         <img src="assets/logoCorbela.png" style="max-width: 300px">
-        </div>
-        </div>
+          <div class="columns small-6 "  style=" text-align: right;">
+            <img src="assets/logoCorbela.png" style="max-width: 300px">
+          </div>
+      </div>
         
 
 <h4 class="text-center" style="color: #EE9319;padding: 10px;font-family: 'Lato', sans-serif;font-weight: 700;text-transform: uppercase;">BASES CONCURSO FOTOGRAFICO – EDICION 2018</h4>

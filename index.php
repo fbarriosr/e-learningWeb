@@ -30,6 +30,16 @@
                   <h6 style="color: #EE9319; padding: 10px;font-family: 'Lato', sans-serif;font-weight:700; text-transform: uppercase;"><span style="font-weight:400"></span> Bases del Concurso </h6>
                 </a>
             </div> 
+            <div class="row">
+              <div class="columns small-12 medium-6" style=" text-align: center;">
+              <img src="assets/logoBienestar.png" style="max-width: 200px; min-width: 150px">
+            </div>
+
+            <div class="columns small-12 medium-6 "  style=" text-align: center;">
+              <img src="assets/logoCorbela.png" style="max-width: 200px; min-width: 150px">
+          </div>
+            </div>
+            
         </div>
         <div id="pagina2">   
             <div id="divCenterH3" class="columns small-12 text-center align-self-middle " style="height: auto; width: 100%" >
