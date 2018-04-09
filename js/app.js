@@ -1,230 +1,173 @@
- 
-  var config = {
-    apiKey: "AIzaSyBtIwxxhd-VUEdje1Q8FhHkhWc3-ihsmUQ",
-    authDomain: "fotogramashow.firebaseapp.com",
-    databaseURL: "https://fotogramashow.firebaseio.com",
-    projectId: "fotogramashow",
-    storageBucket: "fotogramashow.appspot.com",
-    messagingSenderId: "454182483820"
-  };
-  firebase.initializeApp(config);
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyAP7YCpyEuV3p-mJUGnKVMb17j_0TMkbEo",
+  authDomain: "e-learning-62f78.firebaseapp.com",
+  databaseURL: "https://e-learning-62f78.firebaseio.com",
+  projectId: "e-learning-62f78",
+  storageBucket: "e-learning-62f78.appspot.com",
+  messagingSenderId: "482827545650"
+};
+firebase.initializeApp(config);
 
- // Get a reference to the storage service, which is used to create references in your storage bucket
-
-
-  var imagesFBRef = firebase.database().ref().child('registroConcursante');
-
-  var uploader = document.getElementById('uploader');
-  var fileButton = document.getElementById('exampleFileUpload');
-
-  var imagenName = "";
-  var downloadURL ="";
-
-  var envio = false;
-
-
-  // Listen for file selection
-
-  fileButton.addEventListener('change', function(e){
-
-    // get file
-
-    var file = e.target.files[0];
-
-    var nameRand = Math.floor((Math.random() * 100000000) + 1);
-
-    imagenName = nameRand+'_'+file.name;
-    // create a storage ref
-
-    var storageRef = firebase.storage().ref('ConcursoFotosVerano2018/' + imagenName);
-
-    // upload file
-
-    var task = storageRef.put(file);
-
-    task.on('state_changed',
-
-        function progress(snapshot){
-            var porcentaje = (snapshot.bytesTransferred/snapshot.totalBytes ) * 100;
-            uploader.value = porcentaje;
-        },
-
-        function error(err){
-
-        },
-
-        function complete(){
-            downloadURL = task.snapshot.downloadURL;
-            $('#pagina2').show();
-            $('#pagina1').hide();
-        }
-    );
-
-  });
-
-
-
-$( document ).ready(function() {
-    console.log( "ready!" );
-    $('#fieldNone').hide();
-    $('#fieldGood').hide();
-    $('#fieldRutMailMalo').hide();
-    $('#fieldRutMalo').hide();
-    $('#fieldMailMalo').hide();
-
-    $('#pagina1').show();
-    $('#pagina2').hide();
+var imagesFBRef = firebase.database().ref().child('curso').orderByKey();
+var paginaActual = 1;
+$(document).ready(function() {
+    console.log( "ready!" );   
+    loadImages();
+     
 });
 
 
-$('#fieldGood').find('#close-modal').click(function(event){
-    event.preventDefault();
-    location.reload();
-    console.log('hola');
-});
+function loadImages(){
+  imagesFBRef.on("value",function(snapshot){
 
-$('#btnSend').click(function(){
+    var datos = snapshot.val();
+    // load paginador
+    var itemPorPagina = 8;
 
-    var name = $('#name').val();
-    var lastName = $('#lastName').val();  
-    var rut = $('#rut').val();
-    var email = $('#email').val();
+    if (datos == null){
+      document.getElementById('addPhoto').innerHTML = `
+        <div class="fixed-action-btn">
+         <a href="clases.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>
+       </div>
+        <br>
+        <h3 style="padding: 10px;" > No hay cursos disponibles</h3>
+      `;  
 
-    var id = Math.floor((Math.random() * 100000000) + 1);
-
-    console.log("DATA ");
-    console.log("name: ",name);
-    console.log("lastName: ",lastName);
-    console.log("rut: ",rut);
-    console.log("email: ",email);
-
-
-    if (name == "" || lastName == "" || rut == "" || email == ""  ){
-       console.log("vacio ");  
-      // alert("Debes Completar los campos pedidos");
-       $('#fieldNone').modal('open');
+      paginato(0,1);
 
     }else {
-        
-        var aux = $.rut.formatear(rut) 
-        var es_valido = $.rut.validar(aux);
-        var es_mail = validateEmail(email);
 
-        if (es_valido && es_mail){
-           //alert('rut  y email valido');
-
-           //console.log("rut  y email valido");
-          
-          
-           var uno = new Promise ((resolve,reject) => {
-                guardarInfoImagenes(name, lastName,rut,email,imagenName,downloadURL)
-            });
-
-           var dos = new Promise ((resolve,reject) => {
-               envio = true;
-               $('#fieldGood').modal('open');
-            });
-          
-           Promise.all([uno,dos]);
-          
-
-        }else if (es_valido && !es_mail)
-        {
-           $('#fieldMailMalo').modal('open');
-
-        }else if (!es_valido && es_mail)
-        {
-           $('#fieldRutMalo').modal('open');
-        }else if (!es_valido && !es_mail)
-        {
-          $('#fieldRutMailMalo').modal('open');
-
+      var numeroImagenes = Object.keys(datos).length;
+      var numeroPaginas = Math.ceil(numeroImagenes/itemPorPagina) ;
+      console.log("numeroImagenes",numeroImagenes);
+      console.log("itemPorPagina",itemPorPagina);
+      console.log("numeroPaginas",numeroPaginas);
+       
+      paginato(numeroPaginas,paginaActual);
+      writeImageDom(datos,itemPorPagina,numeroImagenes,0);
+      
+      $('#btnRight').click(function(){
+        if (paginaActual == numeroPaginas){
+        }else {
+          var aux = `#pag_`+paginaActual;
+          $(aux).removeClass("active");
+          paginaActual = paginaActual +1;
+          var inicioItems = itemPorPagina * (paginaActual-1 )  ;
+          console.log("btnRight");
+          console.log("paginaActual", paginaActual);
+          var aux = `#pag_`+paginaActual;
+          $(aux).addClass("active");
+          writeImageDom(datos,itemPorPagina,numeroImagenes,inicioItems);
         }
-     
-       //
-     
+      });
+
+      $('#btnLeft').click(function(){
+          if (paginaActual == 1){
+          }else {
+            var aux = `#pag_`+paginaActual;
+            $(aux).removeClass("active");
+            paginaActual = paginaActual -1;
+            var inicioItems = itemPorPagina * (paginaActual-1 ) ;
+            console.log("btnLeft");
+            console.log("paginaActual", paginaActual);
+            var aux = `#pag_`+paginaActual;
+            $(aux).addClass("active");
+            writeImageDom(datos,itemPorPagina,numeroImagenes,inicioItems);
+          }
+      });
+
+      
     }
-
-});
-
-$(document).on($.modal.CLOSE,function(){
- console.log('cerrar modal');
- if (envio) {
-    location.reload(true);
- }
-})
-
-
-
-function checkRut(rut) {
-    // Despejar Puntos
-    var valor = rut.value.replace('.','');
-    // Despejar Guión
-    valor = valor.replace('-','');
-    
-    // Aislar Cuerpo y Dígito Verificador
-    cuerpo = valor.slice(0,-1);
-    dv = valor.slice(-1).toUpperCase();
-    
-    // Formatear RUN
-    rut.value = cuerpo + '-'+ dv
-    
-    // Si no cumple con el mínimo ej. (n.nnn.nnn)
-    if(cuerpo.length < 7) { rut.setCustomValidity("RUT Incompleto"); return false;}
-    
-    // Calcular Dígito Verificador
-    suma = 0;
-    multiplo = 2;
-    
-    // Para cada dígito del Cuerpo
-    for(i=1;i<=cuerpo.length;i++) {
-    
-        // Obtener su Producto con el Múltiplo Correspondiente
-        index = multiplo * valor.charAt(cuerpo.length - i);
-        
-        // Sumar al Contador General
-        suma = suma + index;
-        
-        // Consolidar Múltiplo dentro del rango [2,7]
-        if(multiplo < 7) { multiplo = multiplo + 1; } else { multiplo = 2; }
-  
-    }
-    
-    // Calcular Dígito Verificador en base al Módulo 11
-    dvEsperado = 11 - (suma % 11);
-    
-    // Casos Especiales (0 y K)
-    dv = (dv == 'K')?10:dv;
-    dv = (dv == 0)?11:dv;
-    
-    // Validar que el Cuerpo coincide con su Dígito Verificador
-    if(dvEsperado != dv) { rut.setCustomValidity("RUT Inválido"); return false; }
-    
-    // Si todo sale bien, eliminar errores (decretar que es válido)
-    rut.setCustomValidity('');
-    return true;
+  })
 }
 
-function validateEmail($email) {
-  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-  return emailReg.test( $email );
+
+
+
+function paginato(numeroPaginas, paginaActual){
+  if(numeroPaginas == 0 | numeroPaginas == 1)
+  {
+    document.getElementById('paginas').innerHTML = "";
+    return 0 ;  
+  } else {
+    var resultado = "";
+    var liPaginas ="";
+    console.log("numeroPaginas",numeroPaginas);
+    console.log("paginaActual",paginaActual);
+    for (var i = 1; i <= numeroPaginas; i++){
+      if (i == paginaActual){
+        liPaginas += `<li id="pag_`+i+`" class="active"><a >`+i+`</a></li>`;
+      }else {
+        liPaginas += `<li id="pag_`+i+`" class="waves-effect"><a>`+i+`</a></li>`;
+      } 
+    }
+    resultado = `<ul class="pagination">
+                    <li class="waves-effect">
+                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>
+                    </li>`
+                      + liPaginas+`
+                    <li class="waves-effect">
+                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>
+                    </li>
+                </ul>`;
+
+
+    document.getElementById('paginas').innerHTML = resultado;
+  }
 }
 
-function guardarInfoImagenes(name, lastName,rut,email,imagenName,downloadURL){ 
-    imagesFBRef.push({
-    name: name,
-    lastName: lastName,
-    rut: rut,
-    email: email,
-    nameImagen: imagenName,
-    urlImagen: downloadURL,
-    v: "false",
-    v_notP: "false",
-    v_p_notW: "false",
-    v_p_w: "false"
+function writeImageDom(datos, itemPorPagina,numeroImagenes,inicio){
+  if (numeroImagenes == 0){
+      document.getElementById('addPhoto').innerHTML = "";
+  }else {
+    var resultado = `
+        <div class="fixed-action-btn">
+         <a href="clases.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>
+       </div>
+       <div class="row" style="padding-top:80px; padding-left:20px; padding-right:20px;">
+    `;
+    var key ="";
+    var i = 0;
+    var final = 0;
+    if ( (inicio+itemPorPagina)>numeroImagenes){
+      final = numeroImagenes; 
+    } else {
+      final = inicio+itemPorPagina;
     }
-  );
+    console.log('final', final);
+    console.log('inicio', inicio);
+
+    // load cartas
+    for (var key in datos){
+      if (i >= inicio && i< final){
+        resultado += `
+                      <a href="clases.php?curso=`+key+`" style="text-decoration:none;color:black;">
+                        <div class="col s6 m4 l3" >
+                          <div class="card hoverable">
+                            <div class="card-image">
+                              <img src="`+datos[key].img+`">
+                            </div>
+                            <div class="card-content">
+                              <span class="card-title">`+datos[key].name+`</span>
+                              <p> `+datos[key].date+` </p>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                  `;
+
+       console.log("url",key);
+      }
+      i= i+1;  
+    }
+    resultado += ` </div>`;
+
+    document.getElementById('addPhoto').innerHTML = resultado;
+  } 
 }
+
+
 
 
 
