@@ -146,7 +146,7 @@ function loadImagesEmpty() {
     var type = $('#type_name').val();  
     var date = $('#date_name').val();
     var description = $('#description_name').val();
-    var img = "gs://e-learning-62f78.appspot.com/image1.png";
+    var img = "https://firebasestorage.googleapis.com/v0/b/e-learning-62f78.appspot.com/o/image1.png?alt=media&token=d145adf4-30f4-4295-8a8f-e74971e4b27b";
 
     console.log("DATA ");
     console.log("name: ",name);

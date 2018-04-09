@@ -1,4 +1,4 @@
-// Initialize Firebase
+  // Initialize Firebase
 var config = {
   apiKey: "AIzaSyAP7YCpyEuV3p-mJUGnKVMb17j_0TMkbEo",
   authDomain: "e-learning-62f78.firebaseapp.com",
@@ -27,15 +27,16 @@ $(document).ready(function() {
     console.log("1.cursoKey == null && claseKey == null");
    
   }else if(cursoKey != null && claseKey == null) {
-    FBRef = firebase.database().ref().child('curso/');
+    FBRef = firebase.database().ref().child('curso/'+cursoKey+'/clases');
     newClass();
     console.log("2.cursoKey != null && claseKey == null");
+
+
 
   }else if (cursoKey != null && claseKey != null) {
     console.log("3.cursoKey != null && claseKey != null");
    
   }else if (cursoKey == null && claseKey != null) {
-
    console.log("4.cursoKey == null && claseKey != null");
   }
   
@@ -63,7 +64,6 @@ function empty() {
 
 function newClass() {
 
-
   document.getElementById('addPhoto').innerHTML = ` 
      
       <div class="row" style="padding-top:80px; padding-left:20px; padding-right:20px;">
@@ -83,7 +83,7 @@ function newClass() {
                       <label for="video_name">video</label>
                     </div>
                     <div class="input-field col s12">
-                      <input id="date_name" type="text" class="datepicker">
+                      <input id="pdf_name" type="text" class="validate">
                       <label for="pdf_name">PDF</label>
                     </div>
                     <div class="input-field col  s12">
@@ -93,22 +93,20 @@ function newClass() {
                   </div>
                 </div>
                 <div class="card-action center-align">
-                  <a class="waves-effect waves-light btn">Guardar</a>
+                  <a id="btnSend" class="waves-effect waves-light btn">Guardar</a>
                 </div>
               </div>
             </div>
           </div> 
         </div>
+        <div id="fieldNone" class="modal">
+            <p style="text-align: center;">Estimado Debes Ingresar Todos los Campos.</p>
+        </div>
+        <div id="fieldGood" class="modal">
+            <p style="font-weight: bolder; text-align: center;">Dato Ingresado. <br></p>
+        </div>
   
     `;
-}
-
-
-
-
-function paginaUno() {
-
-     
 
 
     $('#fieldGood').find('#close-modal').click(function(event){
@@ -119,51 +117,47 @@ function paginaUno() {
 
     $('#btnSend').click(function(){
 
-        var name = $('#name').val();
-        var price = $('#price').val();  
-        var url = $('#url').val();
-        var image = $('#image').val();
-        var description = $('#description').val();
-
-        var id = Math.floor((Math.random() * 100000000) + 1);
-
+        var name = $('#last_name').val();
+        var video = $('#video_name').val();  
+        var pdf = $('#pdf_name').val();   
+        var url = $('#url_name').val();
+        var img = "https://firebasestorage.googleapis.com/v0/b/e-learning-62f78.appspot.com/o/image2.png?alt=media&token=5c4c772a-d383-483c-808d-5f1c033d2360";
         console.log("DATA ");
-        console.log("price: ",price);
+        console.log("name: ",name);
+        console.log("video: ",video);
+        console.log("pdf: ",pdf);
         console.log("url: ",url);
-        console.log("image: ",image);
-        console.log("description: ",description);
+        console.log("img: ",img);
 
-        if (name == "" || price == "" || url == "" || image == "" || description == ""  ){
+
+        if (name == "" || video == "" || pdf == "" || url == ""){
            console.log("vacio ");  
-          // alert("Debes Completar los campos pedidos");
-           $('#fotoNone').modal('open');
+     
 
         }else { 
-           guardarInfo(name,price,url,image,description);
+           guardarInfo(name,video,pdf,url,img);
         }
         
     });
 
     $(document).on($.modal.CLOSE,function(){
      console.log('cerrar modal');
-   
         location.reload(true);
- 
     })
 
-    function guardarInfo(name, price,url,image,description){ 
+    function guardarInfo(name, video, pdf, url, img){ 
         FBRef.push({
         name: name,
-        price: price,
+        video: video,
+        pdf: pdf,
         url: url,
-        image: image,
-        description: description
+        img: img
         });
-
-         $('#fieldGood').modal('open');
+        $('#fieldGood').modal('open');
     }
-    
 }
+
+
 
 
 
