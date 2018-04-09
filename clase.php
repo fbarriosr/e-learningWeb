@@ -4,7 +4,7 @@
 
    <nav>
     <div class="header nav-wrapper ">
-        <a href="clases.php">
+        <a href="javascript:javascript:history.go(-1)">
           <i class="material-icons left" style="padding-top: 20px;padding-left: 10px;">arrow_back</i>
         </a> 
        <a href="#" class="brand-logo center" style="font-weight: 700;">CLASE</a>

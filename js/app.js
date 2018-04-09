@@ -28,7 +28,7 @@ function loadImages(){
     if (datos == null){
       document.getElementById('addPhoto').innerHTML = `
         <div class="fixed-action-btn">
-         <a href="clases.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>
+         <a href="curso.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>
        </div>
         <br>
         <h3 style="padding: 10px;" > No hay cursos disponibles</h3>
@@ -123,7 +123,7 @@ function writeImageDom(datos, itemPorPagina,numeroImagenes,inicio){
   }else {
     var resultado = `
         <div class="fixed-action-btn">
-         <a href="clases.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>
+         <a href="curso.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>
        </div>
        <div class="row" style="padding-top:80px; padding-left:20px; padding-right:20px;">
     `;
@@ -142,7 +142,7 @@ function writeImageDom(datos, itemPorPagina,numeroImagenes,inicio){
     for (var key in datos){
       if (i >= inicio && i< final){
         resultado += `
-                      <a href="clases.php?curso=`+key+`" style="text-decoration:none;color:black;">
+                      <a href="curso.php?curso=`+key+`" style="text-decoration:none;color:black;">
                         <div class="col s6 m4 l3" >
                           <div class="card hoverable">
                             <div class="card-image">

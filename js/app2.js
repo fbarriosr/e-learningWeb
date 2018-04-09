@@ -32,17 +32,15 @@ $(document).ready(function() {
       loadImages();
 
     }
-    
+
+
+
      
 });
-
 
 function loadImagesEmpty() {
 
   document.getElementById('addPhoto').innerHTML = ` 
-   <div class="fixed-action-btn">
-     <a id="btnAdd" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
-    </div>
     <div class="row " style="padding-top:80px; padding-left:20px; padding-right:20px;">
         <div class="col s12 hide-on-med-and-up">
           <div class="card">
@@ -108,26 +106,7 @@ function loadImagesEmpty() {
               </div>
             </div>
           </div>
-        </div>
-        <div class="col s12 left-align">
-         <h3>Clases</h3>
-        </div>
-        <div class="row" style="padding-top:80px; padding-left:20px; padding-right:20px;">
-        <a href="detalle.php" style="text-decoration:none;color:black;">
-          <div class="col s6 m3" >
-            <div class="card hoverable">
-              <div class="card-image">
-                <img src="assets/image2.png">  
-              </div>
-              <div class="card-content">
-                <span class="card-title">Nombre</span>
-                <p> Fecha: </p>
-              </div>
-            </div>
-          </div>
-        </a>
-
-         </div>     
+        </div>    
       </div>
       <div id="fieldNone" class="modal">
           <p style="text-align: center;">Estimado Debes Ingresar Todos los Campos.</p>
@@ -199,22 +178,22 @@ function loadImagesEmpty() {
   });
 
   function guardarInfo(name, type,date,img,description){ 
-      FBRef.push({
+     var aux= FBRef.push({
       name: name,
       type: type,
       date: date,
       img: img,
       description: description
       });
-
       console.log('Guardado');
       $('#fieldGood').modal('open');
+
+      var cursoKeyAux = aux.getKey();
+      console.log("push key:", cursoKeyAux);
+      window.open("curso.php?curso="+cursoKeyAux,"_self");
   }
 
-  $('#btnAdd').click(function(){
-    console.log("btnAdd");
-    window.open("detalle.php?curso="+cursoKey,"_self");
-  });
+
             
   $(function(){
         $('.datepicker').pickadate({
@@ -247,9 +226,11 @@ function loadImages() {
         <h3 style="padding: 10px;" > Error de la key</h3>
       `;  
     }else {
-
+    console.log("Curso key",cursoKey); 
     console.log("nombre Curso",datos.name);
-     document.getElementById('addPhoto').innerHTML = ` 
+    console.log("datos Curso",datos);
+   
+    var resultado = ` 
      <div class="fixed-action-btn">
        <a id="btnAdd" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
       </div>
@@ -320,27 +301,6 @@ function loadImages() {
               </div>
             </div>
           </div>
-          <div class="col s12 left-align">
-           <h3>Clases</h3>
-          </div>
-          <div class="row" style="padding-top:80px; padding-left:20px; padding-right:20px;">
-          <a href="detalle.php" style="text-decoration:none;color:black;">
-            <div class="col s6 m3" >
-              <div class="card hoverable">
-                <div class="card-image">
-                  <img src="assets/image2.png">  
-                </div>
-                <div class="card-content">
-                  <span class="card-title">Nombre</span>
-                  <p> Fecha: </p>
-                </div>
-              </div>
-            </div>
-          </a>
-
-           </div>
-
-           
         </div>
         <div id="fieldNone" class="modal">
             <p style="text-align: center;">Estimado Debes Ingresar Todos los Campos.</p>
@@ -350,6 +310,36 @@ function loadImages() {
         </div>
   
     `;
+
+    if (datos.clases != null){
+      resultado += `
+          <div class="col s12 left-align">
+           <h3>Clases</h3>
+          </div> 
+          <div class="row" style="padding-top:80px; padding-left:20px; padding-right:20px;">
+        `;
+      for (var key in datos.clases){  
+        resultado += `
+            <a href="clase.php?curso=`+cursoKey+`&clase=`+key+`" style="text-decoration:none;color:black;">
+              <div class="col s6 m3" >
+                <div class="card hoverable">
+                  <div class="card-image">
+                    <img src="`+datos.clases[key].img+`">  
+                  </div>
+                  <div class="card-content">
+                    <span class="card-title">`+datos.clases[key].name+`</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+        `;
+      }
+      resultado += ` </div>  `;
+    } 
+    
+      
+
+     document.getElementById('addPhoto').innerHTML = resultado;
    
     $('#btnUpdate').click(function(){
 
@@ -359,7 +349,7 @@ function loadImages() {
       var type = $('#type_name').val();  
       var date = $('#date_name').val();
       var description = $('#description_name').val();
-      var img = "gs://e-learning-62f78.appspot.com/image1.png";
+      var img = "https://firebasestorage.googleapis.com/v0/b/e-learning-62f78.appspot.com/o/image1.png?alt=media&token=d145adf4-30f4-4295-8a8f-e74971e4b27b";
 
       console.log("DATA ");
       console.log("name: ",name);
@@ -428,9 +418,9 @@ function loadImages() {
       var poto = "watos";
       console.log("btnAdd watos");
       if (claseKey != null) {
-        window.open("detalle.php?curso="+cursoKey+"&clase="+claseKey,"_self");
+        window.open("clase.php?curso="+cursoKey+"&clase="+claseKey,"_self");
       }else {
-        window.open("detalle.php?curso="+cursoKey,"_self");
+        window.open("clase.php?curso="+cursoKey,"_self");
       }
       
     });

@@ -34,23 +34,15 @@ $(document).ready(function() {
 
 
   }else if (cursoKey != null && claseKey != null) {
+    FBRef = firebase.database().ref().child('curso/'+cursoKey+'/clases/'+claseKey);
     console.log("3.cursoKey != null && claseKey != null");
+    editClass();
    
   }else if (cursoKey == null && claseKey != null) {
    console.log("4.cursoKey == null && claseKey != null");
+   empty();
   }
-  
-/*
-  if (cursoKey == null) {
-    FBRef = firebase.database().ref().child('curso/');
-    loadImagesEmpty();
-
-  } else {
-    FBRef = firebase.database().ref().child('curso/'+cursoKey); 
-    loadImages();
-
-  }
-  */   
+   
 });
 
 
@@ -87,8 +79,8 @@ function newClass() {
                       <label for="pdf_name">PDF</label>
                     </div>
                     <div class="input-field col  s12">
-                      <input id="url_name" type="text" class="validate">
-                      <label for="url_name">Url</label>
+                      <input id="description_name" type="text" class="validate">
+                      <label for="description_name">Descripción</label>
                     </div>
                   </div>
                 </div>
@@ -120,22 +112,123 @@ function newClass() {
         var name = $('#last_name').val();
         var video = $('#video_name').val();  
         var pdf = $('#pdf_name').val();   
-        var url = $('#url_name').val();
+        var description = $('#description_name').val();
         var img = "https://firebasestorage.googleapis.com/v0/b/e-learning-62f78.appspot.com/o/image2.png?alt=media&token=5c4c772a-d383-483c-808d-5f1c033d2360";
         console.log("DATA ");
         console.log("name: ",name);
         console.log("video: ",video);
         console.log("pdf: ",pdf);
-        console.log("url: ",url);
+        console.log("description: ",description);
         console.log("img: ",img);
 
 
-        if (name == "" || video == "" || pdf == "" || url == ""){
+        if (name == "" || video == "" || pdf == "" || description == ""){
            console.log("vacio ");  
      
 
         }else { 
-           guardarInfo(name,video,pdf,url,img);
+           guardarInfo(name,video,pdf,description,img);
+        }
+        
+    });
+
+    $(document).on($.modal.CLOSE,function(){
+     console.log('cerrar modal');
+     window.history.back();
+    })
+
+    function guardarInfo(name, video, pdf, description, img){ 
+        FBRef.push({
+        name: name,
+        video: video,
+        pdf: pdf,
+        description: description,
+        img: img
+        });
+        $('#fieldGood').modal('open');
+
+    }
+}
+
+
+
+
+function editClass() {
+
+  FBRef.on("value",function(snapshot){
+    var datos = snapshot.val();
+
+    document.getElementById('addPhoto').innerHTML = ` 
+       
+        <div class="row" style="padding-top:80px; padding-left:20px; padding-right:20px;">
+            <div class="col s12 m8 offset-m2 l6 offset-l3">
+              <div class="card">
+                <div class="card-image">
+                  <img src="assets/image2.png" s>
+                </div>
+                <div class="card-content">
+                  <div class="row">
+                      <div class="input-field col s12">
+                        <input id="last_name" type="text" class="validate">
+                        <label for="last_name">`+datos.name+`</label>
+                      </div>
+                      <div class="input-field col  s12">
+                        <input id="video_name" type="text" class="validate">
+                        <label for="video_name">`+datos.video+`</label>
+                      </div>
+                      <div class="input-field col s12">
+                        <input id="pdf_name" type="text" class="validate">
+                        <label for="pdf_name">`+datos.pdf+`</label>
+                      </div>
+                      <div class="input-field col  s12">
+                        <input id="description_name" type="text" class="validate">
+                        <label for="description_name">`+datos.description
+                        +`</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-action center-align">
+                    <a id="btnSend" class="waves-effect waves-light btn">Actualizar</a>
+                  </div>
+                </div>
+              </div>
+            </div> 
+          </div>
+          <div id="fieldNone" class="modal">
+              <p style="text-align: center;">Estimado Debes Ingresar Todos los Campos.</p>
+          </div>
+          <div id="fieldGood" class="modal">
+              <p style="font-weight: bolder; text-align: center;">Dato Ingresado. <br></p>
+          </div>
+    
+    `;
+
+
+    $('#fieldGood').find('#close-modal').click(function(event){
+        event.preventDefault();
+        console.log('good');
+        //window.history.back();
+    });
+
+    $('#btnSend').click(function(){
+
+        var name = $('#last_name').val();
+        var video = $('#video_name').val();  
+        var pdf = $('#pdf_name').val();   
+        var description = $('#description_name').val();
+        var img = "https://firebasestorage.googleapis.com/v0/b/e-learning-62f78.appspot.com/o/image2.png?alt=media&token=5c4c772a-d383-483c-808d-5f1c033d2360";
+        console.log("DATA ");
+        console.log("name: ",name);
+        console.log("video: ",video);
+        console.log("pdf: ",pdf);
+        console.log("description: ",description);
+        console.log("img: ",img);
+
+
+        if (name == "" || video == "" || pdf == "" || description == ""){
+           console.log("vacio ");  
+        }else { 
+           guardarInfo(name,video,pdf,description,img);
         }
         
     });
@@ -145,18 +238,18 @@ function newClass() {
         location.reload(true);
     })
 
-    function guardarInfo(name, video, pdf, url, img){ 
-        FBRef.push({
+    function guardarInfo(name, video, pdf, description, img){ 
+        FBRef.update({
         name: name,
         video: video,
         pdf: pdf,
-        url: url,
+        description: description,
         img: img
         });
         $('#fieldGood').modal('open');
     }
+  })
 }
-
 
 
 

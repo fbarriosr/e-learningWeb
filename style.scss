@@ -13,8 +13,17 @@ font-family: 'Lato', sans-serif;
 background-color: $body-background;
 }
 
+.card .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
 h3 {
   color: $h3-color;
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 .header {
