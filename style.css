@@ -7,6 +7,18 @@ body {
   font-weight: 600;
   text-transform: uppercase; }
 
+.btnImage {
+  position: relative;
+  margin-top: -200px; }
+
+.file-path-wrapper {
+  position: relative;
+  margin-top: -110px; }
+
+.progressImg {
+  position: relative;
+  margin-top: -50px; }
+
 h3 {
   color: white;
   font-size: 24px;

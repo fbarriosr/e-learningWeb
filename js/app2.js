@@ -31,6 +31,8 @@ $(document).ready(function() {
       FBRef = firebase.database().ref().child('curso/'+cursoKey); 
       loadImages();
 
+
+
     }
 
 
@@ -239,7 +241,7 @@ function loadImages() {
           <div class="col s12 hide-on-med-and-up">
             <div class="card">
               <div class="card-image">
-                <img src="`+datos.img+`">
+                <img src="`+datos.img+`"> 
               </div>
               <div class="card-content">
                 <div class="row">
@@ -269,13 +271,29 @@ function loadImages() {
           </div>
           <div class="col s12 center-align ">
             <div class="card horizontal hide-on-small-only">
-              <div class="card-image ">
+              <div class="card-image " style="background-color:transparent;">
                 <img src="`+datos.img+`">
+                <div class="file-field input-field" style="padding-left:10px;padding-right:10px;">
+                  <div class="btn btn-floating btnImage">
+                    <i class="material-icons">image</i>
+                    <input type="file" (change)="onFileSelection($event)">
+                  </div>
+                  <div class="file-path-wrapper">
+                    <input id="imageInputLbl" class="file-path validate" type="text">
+                  </div>
+                   
+                </div>
+                <div  id= "progressImage" style="padding-left:20px;padding-right:20px;">
+                  <div class="progress ">
+                      <div class="determinate" style="width: 70%"></div>
+                  </div> 
+                </div>
               </div>
               <div class="card-stacked">
                 <div class="card-content">
                   <form class="col s12">
                     <div class="row">
+                    
                       <div class="input-field col m4 l6">
                         <input id="last_name2" type="text" class="validate">
                         <label for="last_name">`+datos.name+`</label>
@@ -293,6 +311,7 @@ function loadImages() {
                         <label for="description_name">`+datos.description+`</label>
                       </div>
                     </div>
+
                   </form>
                 </div>
                 <div class="card-action">
@@ -336,10 +355,13 @@ function loadImages() {
       }
       resultado += ` </div>  `;
     } 
-    
-      
 
      document.getElementById('addPhoto').innerHTML = resultado;
+
+      $('#progressImage').hide();
+        $('#imageInputLbl').hide();
+
+    
    
     $('#btnUpdate').click(function(){
 
