@@ -1,0 +1,171 @@
+$body-background: #212121;
+$body-background-login: #f5f5f5;
+$body-background404: #15210a;
+$header-background: black;
+$footer-background: black;
+$footer-color: white;
+$h3-color: white;
+$titulo-pregunta: black;
+$color-principal: #DA8A2B;
+$btn-color: #424242;
+
+body {
+font-family: 'Lato', sans-serif;
+background-color: $body-background;
+}
+
+.card .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+#btnLogin {
+  width: 100% !important;
+}
+
+label {
+    text-transform: uppercase;
+}
+
+#loginBody {
+  height: 100vh;
+  padding: 30px;
+  background-color: $body-background-login;
+}
+.btnImage {
+  position: relative;
+  margin-top: -200px;
+}
+.file-path-wrapper {
+  position: relative;
+  margin-top: -110px;
+}
+
+.progressImg {
+    position: relative;
+    margin-top: -50px;
+}
+
+h3 {
+  color: $h3-color;
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.header {
+  background-color: $header-background;
+  height:100px !important;
+}
+
+.header a{
+  padding-top:20px;
+}
+.pagination li.active {
+  background-color: $btn-color;
+  border-radius: 20px;
+}
+
+.footerRow{
+  background-color: $footer-background;
+  height: 200px;
+}
+
+.btn-floating i, .btn-floating , .btn{
+  background-color: $btn-color !important;
+}
+
+  body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+.pagination li {
+  margin-left:4px;
+   margin-right:4px;
+}
+
+a.close-modal{
+      top: 2px !important;
+    position: absolute !important;
+    right: 2px !important;
+}
+
+
+
+//Medias Queris
+
+
+
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px)  { 
+
+
+}
+
+
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 568px) 
+and (orientation : portrait) { 
+
+
+}
+
+
+
+
+@media only screen 
+and (min-device-width : 414px) 
+and (max-device-width : 736px) 
+and (orientation : portrait) {
+
+
+}
+
+
+@media only screen 
+and (min-device-width : 414px) 
+and (max-device-width : 736px) 
+and (orientation : landscape) { 
+
+
+}
+
+
+
+@media screen 
+and (min-device-width : 677px) 
+ {
+
+
+
+}
+
+/* Medium and up */
+@media screen and (min-width: 40em) {
+
+
+
+}
+
+/* Medium only */
+@media screen and (min-width: 40em) and (max-width: 63.9375em) {
+
+
+}
+
+/* Large and up */
+@media screen and (min-width: 64em) {
+  
+
+}
+
+/* Large only */
+@media screen and (min-width: 64em) and (max-width: 74.9375em) {}
