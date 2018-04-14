@@ -6,4 +6,6 @@ require('./firebase');
 
 require('./home');
 
+require('./curso');
+
 page(); 

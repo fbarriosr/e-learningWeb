@@ -17,6 +17,12 @@ app.get('/home',function(req,res){   // busca index en view (pug)
 		title: 'home'
 	});
 })
+
+app.get('/curso',function(req,res){   // busca index en view (pug)
+	res.render('index', {
+		title: 'Curso'
+	});
+})
 // Iniciar el server
 app.listen(8080,function(err){
 	if (err) return console.log('Hubo error'), process.exit(1);

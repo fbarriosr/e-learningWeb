@@ -153,9 +153,195 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"global/document":4,"hyperx":7,"on-load":10}],2:[function(require,module,exports){
+},{"global/document":5,"hyperx":8,"on-load":11}],2:[function(require,module,exports){
 
 },{}],3:[function(require,module,exports){
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],4:[function(require,module,exports){
 /* global HTMLElement */
 
 'use strict'
@@ -170,7 +356,7 @@ module.exports = function emptyElement (element) {
   return element
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -191,7 +377,7 @@ if (typeof document !== 'undefined') {
 module.exports = doccy;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":2}],5:[function(require,module,exports){
+},{"min-document":2}],6:[function(require,module,exports){
 (function (global){
 var win;
 
@@ -208,7 +394,7 @@ if (typeof window !== "undefined") {
 module.exports = win;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -229,7 +415,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -525,7 +711,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":6}],8:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":7}],9:[function(require,module,exports){
 'use strict';
 
 var range; // Create a range object for efficently rendering strings to elements.
@@ -1209,7 +1395,7 @@ var morphdom = morphdomFactory(morphAttrs);
 
 module.exports = morphdom;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 assert.notEqual = notEqual
 assert.notOk = notOk
 assert.equal = equal
@@ -1233,7 +1419,7 @@ function assert (t, m) {
   if (!t) throw new Error(m || 'AssertionError')
 }
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /* global MutationObserver */
 var document = require('global/document')
 var window = require('global/window')
@@ -1337,7 +1523,7 @@ function eachMutation (nodes, fn) {
   }
 }
 
-},{"assert":9,"global/document":4,"global/window":5}],11:[function(require,module,exports){
+},{"assert":10,"global/document":5,"global/window":6}],12:[function(require,module,exports){
 (function (process){
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -2484,193 +2670,7 @@ return page_js;
 })));
 
 }).call(this,require('_process'))
-},{"_process":12}],12:[function(require,module,exports){
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-},{}],13:[function(require,module,exports){
+},{"_process":3}],13:[function(require,module,exports){
 var bel = require('bel') // turns template tag into DOM elements
 var morphdom = require('morphdom') // efficiently diffs + morphs two DOM elements
 var defaultEvents = require('./update-events.js') // default events to be copied when dom elements update
@@ -2714,7 +2714,7 @@ module.exports.update = function (fromNode, toNode, opts) {
   }
 }
 
-},{"./update-events.js":14,"bel":1,"morphdom":8}],14:[function(require,module,exports){
+},{"./update-events.js":14,"bel":1,"morphdom":9}],14:[function(require,module,exports){
 module.exports = [
   // attribute events (can be set with attributes)
   'onclick',
@@ -2753,6 +2753,299 @@ module.exports = [
 ]
 
 },{}],15:[function(require,module,exports){
+'use strict';
+
+var _templateObject = _taggedTemplateLiteral(['\n      <div class="container" >\n      <div class="row">\n            <div class="row" id="addPhoto" >\n            <h1 style="color:white"> Vacio </h1>\n            </div>\n        </div> \n      </div>\n    '], ['\n      <div class="container" >\n      <div class="row">\n            <div class="row" id="addPhoto" >\n            <h1 style="color:white"> Vacio </h1>\n            </div>\n        </div> \n      </div>\n    ']),
+    _templateObject2 = _taggedTemplateLiteral(['<ul class="pagination" id="pagina">\n                          </ul>'], ['<ul class="pagination" id="pagina">\n                          </ul>']),
+    _templateObject3 = _taggedTemplateLiteral(['<li class="waves-effect">\n                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>\n                    </li>'], ['<li class="waves-effect">\n                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>\n                    </li>']),
+    _templateObject4 = _taggedTemplateLiteral(['<li class="waves-effect">\n                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>\n                    </li>'], ['<li class="waves-effect">\n                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>\n                    </li>']);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var page = require('page');
+
+var yo = require('yo-yo');
+var empty = require('empty-element');
+var templateNewCurso = require('./newCurso');
+//var btnAdd = require('./btnAdd');
+
+var footerTemplate = require('../home/footer');
+
+var header = document.getElementById('header-container');
+var main = document.getElementById('main-container');
+var footer = document.getElementById('footer-container');
+var FBRef;
+
+page('/curso', function (ctx, next) {
+  load();
+});
+
+function load(ctx, next) {
+  console.log("Curso page");
+  headerLoad();
+  loadImages();
+}
+
+function headerLoad() {
+  var headerTemplate = require('../home/header');
+  empty(header).appendChild(headerTemplate('CURSOS'));
+}
+
+function loadImages() {
+  var url = window.location.href;
+  var params = new URL(url).searchParams;
+  var cursoKey = params.get('curso');
+
+  console.log("ready Clases!");
+  console.log("cursoKey", cursoKey);
+
+  if (cursoKey == null) {
+    console.log("load newCurso");
+    loadNewCurse();
+    loadFooter(0, 0);
+  } else {
+    // loadCurse(cursoKey);
+  }
+}
+
+function loadNewCurse() {
+
+  //FBRef = firebase.database().ref().child('curso/'); 
+
+  var aux = yo(_templateObject);
+
+  empty(main).appendChild(aux);
+
+  var content = document.getElementById('addPhoto');
+
+  content.appendChild(templateNewCurso("image1.png", 'vicio', 'tipo', 'fecha', 'Debes', 'idad', 'Guardado'));
+  /*
+    $('#btnSave').click(function(){
+      btnSave();
+    });
+    $('#btnSave2').click(function(){
+      btnSave2();
+    });
+    $('#fieldGood').find('#close-modal').click(function(event){
+      EventGood(event);
+    });
+  
+    datapickerInit();
+    */
+}
+/*
+function loadCurse(cursoKey){
+  var FBRef;
+  FBRef = firebase.database().ref().child('curso/'+cursoKey); 
+
+  FBRef.on("value",function(snapshot){
+
+    var datos = snapshot.val();
+    var claseKey = null;
+    // load paginador
+    var itemPorPagina = 8;
+
+    if (datos == null){
+      const aux = yo`
+        <div class="container" >
+        <div class="row">
+              <div class="row" id="addPhoto" >
+                <br>
+                <h3 style="padding: 10px;" > Error de la key</h3>
+              </div>
+          </div> 
+        </div>
+      `;
+
+      empty(main).appendChild(aux); 
+      //paginato(0,1);
+
+    }else {
+
+      var numeroImagenes = Object.keys(datos).length;
+      var numeroPaginas = Math.ceil(numeroImagenes/itemPorPagina) ;
+      console.log("numeroImagenes",numeroImagenes);
+      console.log("itemPorPagina",itemPorPagina);
+      console.log("numeroPaginas",numeroPaginas);
+
+      const aux = yo`
+	      <div class="container" >
+				<div class="row">
+		      		<div class="row" id="addPhoto" >
+						
+		      		</div>
+	  			</div> 
+	  	  </div>
+      `;
+
+  	  main.appendChild(aux);
+
+	 
+  	  var content = document.getElementById('addPhoto');
+  	  content.appendChild(btnAdd("curso.php","btnAdd"));
+
+      var inicio = 0;
+      var i = 0;
+      var final = 0;
+      if ( (inicio+itemPorPagina)>numeroImagenes){
+        final = numeroImagenes; 
+      } else {
+        final = inicio+itemPorPagina;
+      }
+      console.log('final', final);
+      console.log('inicio', inicio);
+      
+      for (var key in datos){
+        if (i >= inicio && i< final){
+          content.appendChild(card("curso.php?curso=",key,datos[key].name,datos[key].img,datos[key].date));
+          console.log("url",key);
+        }
+        i= i+1;  
+      } 
+
+      loadFooter(numeroPaginas,paginaActual);
+
+    }
+  });
+}*/
+
+function loadFooter(numeroPaginas, paginaActual) {
+  footer.appendChild(footerTemplate);
+  var paginas = document.getElementById('paginas');
+
+  if (numeroPaginas == 0 | numeroPaginas == 1) {
+    console.log("Sin paginas");
+  } else {
+    var resultado = "";
+    var liPaginas = "";
+    console.log("numeroPaginas", numeroPaginas);
+    console.log("paginaActual", paginaActual);
+
+    var pagination = yo(_templateObject2);
+
+    paginas.appendChild(pagination);
+    var li = document.getElementById('pagina');
+
+    var left = yo(_templateObject3);
+    var right = yo(_templateObject4);
+    li.appendChild(left);
+
+    var numbers = require('../home/pagination');
+
+    for (var i = 1; i <= numeroPaginas; i++) {
+      if (i == paginaActual) {
+        li.appendChild(numbers(i, "active"));
+      } else {
+        li.appendChild(numbers(i, "waves-effect"));
+      }
+    }
+  }
+}
+
+function btnSave() {
+  console.log("DATA ");
+
+  var name = $('#last_name').val();
+  var type = $('#type_name').val();
+  var date = $('#date_name').val();
+  var description = $('#description_name').val();
+  var img = "https://firebasestorage.googleapis.com/v0/b/e-learning-62f78.appspot.com/o/image1.png?alt=media&token=d145adf4-30f4-4295-8a8f-e74971e4b27b";
+
+  console.log("DATA ");
+  console.log("name: ", name);
+  console.log("type: ", type);
+  console.log("date: ", date);
+  console.log("img: ", img);
+  console.log("description: ", description);
+
+  if (name == "" || type_name == "" || date == "" || img == "" || description == "") {
+    console.log("vacio ");
+    alert("Debes Completar los campos pedidos");
+  } else {
+    guardarInfo(name, type, date, img, description);
+  }
+}
+
+function btnSave2() {
+  console.log("DATA ");
+
+  var name = $('#last_name2').val();
+  var type = $('#type_name2').val();
+  var date = $('#date_name2').val();
+  var description = $('#description_name2').val();
+  var img = "https://firebasestorage.googleapis.com/v0/b/e-learning-62f78.appspot.com/o/image1.png?alt=media&token=d145adf4-30f4-4295-8a8f-e74971e4b27b";
+
+  console.log("DATA ");
+  console.log("name: ", name);
+  console.log("type: ", type);
+  console.log("date: ", date);
+  console.log("img: ", img);
+  console.log("description: ", description);
+
+  if (name == "" || type_name == "" || date == "" || img == "" || description == "") {
+    console.log("vacio ");
+    //alert("Debes Completar los campos pedidos");
+    $('#fieldNone').modal('open');
+  } else {
+    guardarInfo(name, type, date, img, description);
+  }
+}
+
+function EventGood(event) {
+  event.preventDefault();
+  location.reload();
+  console.log('good');
+}
+
+function guardarInfo(name, type, date, img, description) {
+  var aux = FBRef.push({
+    name: name,
+    type: type,
+    date: date,
+    img: img,
+    description: description
+  });
+  console.log('Guardado');
+  $('#fieldGood').modal('open');
+
+  var cursoKeyAux = aux.getKey();
+  console.log("push key:", cursoKeyAux);
+  window.open("curso.php?curso=" + cursoKeyAux, "_self");
+}
+
+function datapickerInit() {
+  $('.datepicker').pickadate({
+    monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+    weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+    selectMonths: true,
+    selectYears: 100, // Puedes cambiarlo para mostrar más o menos años
+    today: 'Hoy',
+    clear: 'Limpiar',
+    close: 'Ok',
+    labelMonthNext: 'Siguiente mes',
+    labelMonthPrev: 'Mes anterior',
+    labelMonthSelect: 'Selecciona un mes',
+    labelYearSelect: 'Selecciona un año'
+  });
+}
+
+},{"../home/footer":21,"../home/header":22,"../home/pagination":24,"./newCurso":16,"empty-element":4,"page":12,"yo-yo":13}],16:[function(require,module,exports){
+'use strict';
+
+var _templateObject = _taggedTemplateLiteral(['\n  \t\t<div class="row " style="padding-top:80px; padding-left:20px; padding-right:20px;">\n\t    \t<div class="col s12 hide-on-med-and-up">\n\t          <div class="card">\n\t            <div class="card-image">\n\t              <img src="image1.png">\n\t            </div>\n\t            <div class="card-content">\n\t              <div class="row">\n\t                  <div class="input-field col s12">\n\t                    <input id="last_name" type="text" class="validate">\n\t                    <label for="last_name">name</label>\n\t                  </div>\n\t                  <div class="input-field col  s12">\n\t                    <input id="type_name" type="text" class="validate">\n\t                    <label for="type_name">tipo</label>\n\t                  </div>\n\t                  <div class="input-field col s12">\n\t                    <input id="date_name" type="text" class="datepicker">\n\t                    <label for="date_name">date</label>\n\t                  </div>\n\t                  <div class="input-field col  s12">\n\t                    <input id="description_name" type="text" class="validate">\n\t                    <label for="description_name">desp</label>\n\t                  </div>\n\t              </div>\n\t              <div class="card-action center-align">\n\t                <a id="id" class="waves-effect waves-light btn">Guardar</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class="col s12 center-align ">\n\t          <div class="card horizontal  hide-on-small-only">\n\t            <div class="card-image ">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-stacked">\n\t              <div class="card-content">\n\t                <form class="col s12">\n\t                  <div class="row">\n\t                    <div class="input-field col m4 l6">\n\t                      <input id="last_name2" type="text" class="validate">\n\t                      <label for="last_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col  m4 l6">\n\t                      <input id="type_name2" type="text" class="validate">\n\t                      <label for="type_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col m4 l6">\n\t                      <input id="date_name2" type="text" class="datepicker">\n\t                      <label for="date_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col m12 l6">\n\t                      <input id="description_name2" type="text" class="validate">\n\t                      <label for="description_name">', '</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class="card-action">\n\t                <a  id="ids"  class="waves-effect waves-light btn" >', '</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id="fieldNone" class="modal">\n\t          \t<p style="text-align: center;">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id="fieldGood" class="modal">\n\t\t        <p style="font-weight: bolder; text-align: center;">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t'], ['\n  \t\t<div class="row " style="padding-top:80px; padding-left:20px; padding-right:20px;">\n\t    \t<div class="col s12 hide-on-med-and-up">\n\t          <div class="card">\n\t            <div class="card-image">\n\t              <img src="image1.png">\n\t            </div>\n\t            <div class="card-content">\n\t              <div class="row">\n\t                  <div class="input-field col s12">\n\t                    <input id="last_name" type="text" class="validate">\n\t                    <label for="last_name">name</label>\n\t                  </div>\n\t                  <div class="input-field col  s12">\n\t                    <input id="type_name" type="text" class="validate">\n\t                    <label for="type_name">tipo</label>\n\t                  </div>\n\t                  <div class="input-field col s12">\n\t                    <input id="date_name" type="text" class="datepicker">\n\t                    <label for="date_name">date</label>\n\t                  </div>\n\t                  <div class="input-field col  s12">\n\t                    <input id="description_name" type="text" class="validate">\n\t                    <label for="description_name">desp</label>\n\t                  </div>\n\t              </div>\n\t              <div class="card-action center-align">\n\t                <a id="id" class="waves-effect waves-light btn">Guardar</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class="col s12 center-align ">\n\t          <div class="card horizontal  hide-on-small-only">\n\t            <div class="card-image ">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-stacked">\n\t              <div class="card-content">\n\t                <form class="col s12">\n\t                  <div class="row">\n\t                    <div class="input-field col m4 l6">\n\t                      <input id="last_name2" type="text" class="validate">\n\t                      <label for="last_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col  m4 l6">\n\t                      <input id="type_name2" type="text" class="validate">\n\t                      <label for="type_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col m4 l6">\n\t                      <input id="date_name2" type="text" class="datepicker">\n\t                      <label for="date_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col m12 l6">\n\t                      <input id="description_name2" type="text" class="validate">\n\t                      <label for="description_name">', '</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class="card-action">\n\t                <a  id="ids"  class="waves-effect waves-light btn" >', '</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id="fieldNone" class="modal">\n\t          \t<p style="text-align: center;">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id="fieldGood" class="modal">\n\t\t        <p style="font-weight: bolder; text-align: center;">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t']);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var yo = require('yo-yo');
+
+module.exports = function newCurso(img, name, type_name, date_name, description_name, id, btnName) {
+
+	return yo(_templateObject, img, name, type_name, date_name, description_name, btnName);
+};
+
+},{"yo-yo":13}],17:[function(require,module,exports){
 "use strict";
 
 // Initialize Firebase
@@ -2768,7 +3061,7 @@ var config = {
 firebase.initializeApp(config);
 console.log("ready! Firebase");
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 var _templateObject = _taggedTemplateLiteral(['\n  \t\t<div class="container" >\n\t\t\t<div class="row">\n\t      \t\t<div class="row" id=', ' >\n\t\t\t        <div class="fixed-action-btn">\n\t\t\t         <a href=', ' class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n\t\t\t      \t</div>\n\t\t\t    </div>\n  \t\t\t</div> \n  \t\t</div>\n\t\t'], ['\n  \t\t<div class="container" >\n\t\t\t<div class="row">\n\t      \t\t<div class="row" id=', ' >\n\t\t\t        <div class="fixed-action-btn">\n\t\t\t         <a href=', ' class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n\t\t\t      \t</div>\n\t\t\t    </div>\n  \t\t\t</div> \n  \t\t</div>\n\t\t']);
@@ -2781,7 +3074,21 @@ module.exports = function btnAdd(href, id) {
 		return yo(_templateObject, id, href);
 };
 
-},{"yo-yo":13}],17:[function(require,module,exports){
+},{"yo-yo":13}],19:[function(require,module,exports){
+'use strict';
+
+var _templateObject = _taggedTemplateLiteral(['\n  \t\t<a href=', ' style="text-decoration:none;color:black;">\n\t        <div class="col s6 m4 l3" >\n\t          <div class="card hoverable">\n\t            <div class="card-image">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-content">\n\t              <span class="card-title">', '</span>\n\t              <p> ', ' </p>\n\t            </div>\n\t          </div>\n\t        </div>\n\t    </a>\n\t\t'], ['\n  \t\t<a href=', ' style="text-decoration:none;color:black;">\n\t        <div class="col s6 m4 l3" >\n\t          <div class="card hoverable">\n\t            <div class="card-image">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-content">\n\t              <span class="card-title">', '</span>\n\t              <p> ', ' </p>\n\t            </div>\n\t          </div>\n\t        </div>\n\t    </a>\n\t\t']);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var yo = require('yo-yo');
+
+module.exports = function card(href, key, name, img, date) {
+	var hrefaux = href + key;
+	return yo(_templateObject, hrefaux, img, name, date);
+};
+
+},{"yo-yo":13}],20:[function(require,module,exports){
 'use strict';
 
 var yo = require('yo-yo');
@@ -2840,10 +3147,38 @@ module.exports = function writeImageDom(datos, itemPorPagina, numeroImagenes, in
   }
 };
 
-},{"./templateEmpty":19,"yo-yo":13}],18:[function(require,module,exports){
+},{"./templateEmpty":25,"yo-yo":13}],21:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['\n\t      <div class="container" >\n\t\t\t\t<div class="row">\n\t\t      \t\t<div class="row" id="addPhoto" >\n\t\t\t\t\t\t\n\t\t      \t\t</div>\n\t  \t\t\t</div> \n\t  \t  </div>\n      '], ['\n\t      <div class="container" >\n\t\t\t\t<div class="row">\n\t\t      \t\t<div class="row" id="addPhoto" >\n\t\t\t\t\t\t\n\t\t      \t\t</div>\n\t  \t\t\t</div> \n\t  \t  </div>\n      ']);
+var _templateObject = _taggedTemplateLiteral(['\n  \t\t<footer class=" footerRow page-footer">\n\t\t  <div class="container">\n\t\t      <div class="row">\n\n\t\t        <div id="paginas" class="col s12 center-align" style="padding-top: 50px; ">\n\t\t          \n\t\t        </div>\n\t\t      \n\t\t      </div>\n\t\t    </div>\n\t\t </footer>\n\t\t'], ['\n  \t\t<footer class=" footerRow page-footer">\n\t\t  <div class="container">\n\t\t      <div class="row">\n\n\t\t        <div id="paginas" class="col s12 center-align" style="padding-top: 50px; ">\n\t\t          \n\t\t        </div>\n\t\t      \n\t\t      </div>\n\t\t    </div>\n\t\t </footer>\n\t\t']);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var yo = require('yo-yo');
+
+module.exports = yo(_templateObject);
+
+},{"yo-yo":13}],22:[function(require,module,exports){
+'use strict';
+
+var _templateObject = _taggedTemplateLiteral(['\n\t  <div class="navbar-fixed ">\n\t   \t<nav>\n\t\t    <div class="header nav-wrapper ">\n\t\t       <a href="#" class="brand-logo center" style="font-weight: 700;">', '</a>\n\t\t    </div>\n\t  \t</nav>\n\t  </div>\n    '], ['\n\t  <div class="navbar-fixed ">\n\t   \t<nav>\n\t\t    <div class="header nav-wrapper ">\n\t\t       <a href="#" class="brand-logo center" style="font-weight: 700;">', '</a>\n\t\t    </div>\n\t  \t</nav>\n\t  </div>\n    ']);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var yo = require('yo-yo');
+
+module.exports = function header(name) {
+
+	return yo(_templateObject, name);
+};
+
+},{"yo-yo":13}],23:[function(require,module,exports){
+'use strict';
+
+var _templateObject = _taggedTemplateLiteral(['\n\t      <div class="container" >\n\t\t\t\t<div class="row">\n\t\t      \t\t<div class="row" id="addPhoto" >\n\t\t\t\t\t\t\n\t\t      \t\t</div>\n\t  \t\t\t</div> \n\t  \t  </div>\n      '], ['\n\t      <div class="container" >\n\t\t\t\t<div class="row">\n\t\t      \t\t<div class="row" id="addPhoto" >\n\t\t\t\t\t\t\n\t\t      \t\t</div>\n\t  \t\t\t</div> \n\t  \t  </div>\n      ']),
+    _templateObject2 = _taggedTemplateLiteral(['<ul class="pagination" id="pagina">\n                          </ul>'], ['<ul class="pagination" id="pagina">\n                          </ul>']),
+    _templateObject3 = _taggedTemplateLiteral(['<li class="waves-effect">\n                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>\n                    </li>'], ['<li class="waves-effect">\n                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>\n                    </li>']),
+    _templateObject4 = _taggedTemplateLiteral(['<li class="waves-effect">\n                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>\n                    </li>'], ['<li class="waves-effect">\n                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>\n                    </li>']);
 
 function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
@@ -2854,11 +3189,15 @@ var empty = require('empty-element');
 var templateEmpty = require('./templateEmpty');
 var btnAdd = require('./btnAdd');
 var cursos = require('./cursos');
+var card = require('./card');
+var footerTemplate = require('./footer');
 
 var imagesFBRef = firebase.database().ref().child('curso').orderByKey();
 var paginaActual = 1;
 
+var header = document.getElementById('header-container');
 var main = document.getElementById('main-container');
+var footer = document.getElementById('footer-container');
 
 page('/', function (ctx, next) {
   load();
@@ -2866,9 +3205,15 @@ page('/', function (ctx, next) {
 
 function load(ctx, next) {
 
-  //empty(main).appendChild(templateEmpty );
   console.log("Home page");
+  headerLoad();
   loadImages();
+}
+
+function headerLoad() {
+
+  var headerTemplate = require('./header');
+  empty(header).appendChild(headerTemplate('CURSOS'));
 }
 
 function loadImages() {
@@ -2882,43 +3227,92 @@ function loadImages() {
       empty(main).appendChild(templateEmpty);
       //paginato(0,1);
     } else {
-      /*
-            var numeroImagenes = Object.keys(datos).length;
-            var numeroPaginas = Math.ceil(numeroImagenes/itemPorPagina) ;
-            console.log("numeroImagenes",numeroImagenes);
-            console.log("itemPorPagina",itemPorPagina);
-            console.log("numeroPaginas",numeroPaginas);
-      
-      
-      
-            const aux2 = yo`
-      	      			</div>
-      	  			</div> 
-      	  		</div>
-      	
-            `;
-            */
+
+      var numeroImagenes = Object.keys(datos).length;
+      var numeroPaginas = Math.ceil(numeroImagenes / itemPorPagina);
+      console.log("numeroImagenes", numeroImagenes);
+      console.log("itemPorPagina", itemPorPagina);
+      console.log("numeroPaginas", numeroPaginas);
 
       var aux = yo(_templateObject);
 
-      //paginato(numeroPaginas,paginaActual);
-
-
-      empty(main).appendChild(templateEmpty);
-      //
       main.appendChild(aux);
 
       var content = document.getElementById('addPhoto');
-      content.appendChild(btnAdd("curso.php", "btnAdd"));
+      content.appendChild(btnAdd("curso", "btnAdd"));
 
-      // var template=cursos(datos,itemPorPagina,numeroImagenes,0);
-      // empty(main).appendChild(template); 
+      var inicio = 0;
+      var i = 0;
+      var final = 0;
+      if (inicio + itemPorPagina > numeroImagenes) {
+        final = numeroImagenes;
+      } else {
+        final = inicio + itemPorPagina;
+      }
+      console.log('final', final);
+      console.log('inicio', inicio);
 
+      for (var key in datos) {
+        if (i >= inicio && i < final) {
+          content.appendChild(card("curso?curso=", key, datos[key].name, datos[key].img, datos[key].date));
+          console.log("url", key);
+        }
+        i = i + 1;
+      }
+
+      loadFooter(numeroPaginas, paginaActual);
     }
   });
 }
 
-},{"./btnAdd":16,"./cursos":17,"./templateEmpty":19,"empty-element":3,"page":11,"yo-yo":13}],19:[function(require,module,exports){
+function loadFooter(numeroPaginas, paginaActual) {
+  footer.appendChild(footerTemplate);
+  var paginas = document.getElementById('paginas');
+
+  if (numeroPaginas == 0 | numeroPaginas == 1) {
+    console.log("Sin paginas");
+  } else {
+    var resultado = "";
+    var liPaginas = "";
+    console.log("numeroPaginas", numeroPaginas);
+    console.log("paginaActual", paginaActual);
+
+    var pagination = yo(_templateObject2);
+
+    paginas.appendChild(pagination);
+    var li = document.getElementById('pagina');
+
+    var left = yo(_templateObject3);
+    var right = yo(_templateObject4);
+    li.appendChild(left);
+
+    var numbers = require('./pagination');
+
+    for (var i = 1; i <= numeroPaginas; i++) {
+      if (i == paginaActual) {
+        li.appendChild(numbers(i, "active"));
+      } else {
+        li.appendChild(numbers(i, "waves-effect"));
+      }
+    }
+  }
+}
+
+},{"./btnAdd":18,"./card":19,"./cursos":20,"./footer":21,"./header":22,"./pagination":24,"./templateEmpty":25,"empty-element":4,"page":12,"yo-yo":13}],24:[function(require,module,exports){
+"use strict";
+
+var _templateObject = _taggedTemplateLiteral(["\n    <li id=", " class=", "><a>", "</a></li>\n    "], ["\n    <li id=", " class=", "><a>", "</a></li>\n    "]);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var yo = require('yo-yo');
+
+module.exports = function pagination(i, className) {
+   var pag = "pag_" + i;
+   return yo(_templateObject, pag, className, i);
+};
+
+},{"yo-yo":13}],25:[function(require,module,exports){
 'use strict';
 
 var _templateObject = _taggedTemplateLiteral(['\n\t<div class="container" >\n\t\t<div class="row">\n      <div class="row" id="addPhoto" >\n   \t\t\t  <div class="fixed-action-btn">\n     \t\t\t\t<a href="curso.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n   \t\t\t\t</div>\n    \t\t\t<br>\n    \t\t\t<h3 style="padding: 10px;" > No hay cursos disponibles</h3>\n  \t\t</div>\n  \t</div> \n  </div>  \n'], ['\n\t<div class="container" >\n\t\t<div class="row">\n      <div class="row" id="addPhoto" >\n   \t\t\t  <div class="fixed-action-btn">\n     \t\t\t\t<a href="curso.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n   \t\t\t\t</div>\n    \t\t\t<br>\n    \t\t\t<h3 style="padding: 10px;" > No hay cursos disponibles</h3>\n  \t\t</div>\n  \t</div> \n  </div>  \n']);
@@ -2931,7 +3325,7 @@ var login = yo(_templateObject);
 
 module.exports = login;
 
-},{"yo-yo":13}],20:[function(require,module,exports){
+},{"yo-yo":13}],26:[function(require,module,exports){
 'use strict';
 
 var page = require('page');
@@ -2942,6 +3336,8 @@ require('./firebase');
 
 require('./home');
 
+require('./curso');
+
 page();
 
-},{"./firebase":15,"./home":18,"page":11}]},{},[20]);
+},{"./curso":15,"./firebase":17,"./home":23,"page":12}]},{},[26]);
