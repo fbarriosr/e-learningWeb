@@ -1,10 +1,9 @@
 var yo = require('yo-yo');
 
-module.exports = function card(href,key,name,img,date){
-	var hrefaux = href+key;
+module.exports = function card(key,name,img,date){
   	return yo`
-  		<a href=${hrefaux} style="text-decoration:none;color:black;">
-	        <div class="col s6 m4 l3" >
+  		
+	        <div class="col s6 m4 l3 curso"  alt=${key}>
 	          <div class="card hoverable">
 	            <div class="card-image">
 	              <img src=${img}>
@@ -15,6 +14,6 @@ module.exports = function card(href,key,name,img,date){
 	            </div>
 	          </div>
 	        </div>
-	    </a>
+	  
 		`;
 }

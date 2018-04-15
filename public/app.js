@@ -2755,19 +2755,21 @@ module.exports = [
 },{}],15:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['\n      <div class="container" >\n      <div class="row">\n            <div class="row" id="addPhoto" >\n            <h1 style="color:white"> Vacio </h1>\n            </div>\n        </div> \n      </div>\n    '], ['\n      <div class="container" >\n      <div class="row">\n            <div class="row" id="addPhoto" >\n            <h1 style="color:white"> Vacio </h1>\n            </div>\n        </div> \n      </div>\n    ']),
+var _templateObject = _taggedTemplateLiteral(['\n      <div class="container" >\n      <div class="row">\n            <div class="row" id="addPhoto" >\n            </div>\n        </div> \n      </div>\n    '], ['\n      <div class="container" >\n      <div class="row">\n            <div class="row" id="addPhoto" >\n            </div>\n        </div> \n      </div>\n    ']),
     _templateObject2 = _taggedTemplateLiteral(['<ul class="pagination" id="pagina">\n                          </ul>'], ['<ul class="pagination" id="pagina">\n                          </ul>']),
     _templateObject3 = _taggedTemplateLiteral(['<li class="waves-effect">\n                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>\n                    </li>'], ['<li class="waves-effect">\n                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>\n                    </li>']),
     _templateObject4 = _taggedTemplateLiteral(['<li class="waves-effect">\n                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>\n                    </li>'], ['<li class="waves-effect">\n                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>\n                    </li>']);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral(strings, raw) {
+  return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
 
 var page = require('page');
 
 var yo = require('yo-yo');
 var empty = require('empty-element');
 var templateNewCurso = require('./newCurso');
-//var btnAdd = require('./btnAdd');
+var btnAdd = require('../home/btnAdd');
 
 var footerTemplate = require('../home/footer');
 
@@ -2775,6 +2777,10 @@ var header = document.getElementById('header-container');
 var main = document.getElementById('main-container');
 var footer = document.getElementById('footer-container');
 var FBRef;
+
+var url = window.location.href;
+var params = new URL(url).searchParams;
+var cursoKey = params.get('curso');
 
 page('/curso', function (ctx, next) {
   load();
@@ -2788,16 +2794,14 @@ function load(ctx, next) {
 
 function headerLoad() {
   var headerTemplate = require('../home/header');
-  empty(header).appendChild(headerTemplate('CURSOS'));
+  empty(header).appendChild(headerTemplate('CURSO'));
 }
 
 function loadImages() {
-  var url = window.location.href;
-  var params = new URL(url).searchParams;
-  var cursoKey = params.get('curso');
 
   console.log("ready Clases!");
-  console.log("cursoKey", cursoKey);
+  console.log("url:", url);
+  console.log("cursoKey:", cursoKey);
 
   if (cursoKey == null) {
     console.log("load newCurso");
@@ -2810,28 +2814,28 @@ function loadImages() {
 
 function loadNewCurse() {
 
-  //FBRef = firebase.database().ref().child('curso/'); 
+  FBRef = firebase.database().ref().child('curso/');
 
+  console.log('FBRef:', FBRef);
   var aux = yo(_templateObject);
 
   empty(main).appendChild(aux);
 
   var content = document.getElementById('addPhoto');
 
-  content.appendChild(templateNewCurso("image1.png", 'vicio', 'tipo', 'fecha', 'Debes', 'idad', 'Guardado'));
-  /*
-    $('#btnSave').click(function(){
-      btnSave();
-    });
-    $('#btnSave2').click(function(){
-      btnSave2();
-    });
-    $('#fieldGood').find('#close-modal').click(function(event){
-      EventGood(event);
-    });
-  
-    datapickerInit();
-    */
+  content.appendChild(templateNewCurso("image1.png", 'Nombre', 'Tipo', 'Fecha', 'Descripción', 'btnSave', 'Guardado'));
+
+  $('#btnSave').click(function () {
+    btnSave();
+  });
+  $('#btnSave2').click(function () {
+    btnSave2();
+  });
+  $('#fieldGood').find('#close-modal').click(function (event) {
+    EventGood(event);
+  });
+
+  datapickerInit();
 }
 /*
 function loadCurse(cursoKey){
@@ -3010,7 +3014,7 @@ function guardarInfo(name, type, date, img, description) {
 
   var cursoKeyAux = aux.getKey();
   console.log("push key:", cursoKeyAux);
-  window.open("curso.php?curso=" + cursoKeyAux, "_self");
+  window.open("curso?curso=" + cursoKeyAux, "_self");
 }
 
 function datapickerInit() {
@@ -3031,24 +3035,27 @@ function datapickerInit() {
   });
 }
 
-},{"../home/footer":21,"../home/header":22,"../home/pagination":24,"./newCurso":16,"empty-element":4,"page":12,"yo-yo":13}],16:[function(require,module,exports){
-'use strict';
+},{"../home/btnAdd":18,"../home/footer":21,"../home/header":22,"../home/pagination":24,"./newCurso":16,"empty-element":4,"page":12,"yo-yo":13}],16:[function(require,module,exports){
+"use strict";
 
-var _templateObject = _taggedTemplateLiteral(['\n  \t\t<div class="row " style="padding-top:80px; padding-left:20px; padding-right:20px;">\n\t    \t<div class="col s12 hide-on-med-and-up">\n\t          <div class="card">\n\t            <div class="card-image">\n\t              <img src="image1.png">\n\t            </div>\n\t            <div class="card-content">\n\t              <div class="row">\n\t                  <div class="input-field col s12">\n\t                    <input id="last_name" type="text" class="validate">\n\t                    <label for="last_name">name</label>\n\t                  </div>\n\t                  <div class="input-field col  s12">\n\t                    <input id="type_name" type="text" class="validate">\n\t                    <label for="type_name">tipo</label>\n\t                  </div>\n\t                  <div class="input-field col s12">\n\t                    <input id="date_name" type="text" class="datepicker">\n\t                    <label for="date_name">date</label>\n\t                  </div>\n\t                  <div class="input-field col  s12">\n\t                    <input id="description_name" type="text" class="validate">\n\t                    <label for="description_name">desp</label>\n\t                  </div>\n\t              </div>\n\t              <div class="card-action center-align">\n\t                <a id="id" class="waves-effect waves-light btn">Guardar</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class="col s12 center-align ">\n\t          <div class="card horizontal  hide-on-small-only">\n\t            <div class="card-image ">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-stacked">\n\t              <div class="card-content">\n\t                <form class="col s12">\n\t                  <div class="row">\n\t                    <div class="input-field col m4 l6">\n\t                      <input id="last_name2" type="text" class="validate">\n\t                      <label for="last_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col  m4 l6">\n\t                      <input id="type_name2" type="text" class="validate">\n\t                      <label for="type_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col m4 l6">\n\t                      <input id="date_name2" type="text" class="datepicker">\n\t                      <label for="date_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col m12 l6">\n\t                      <input id="description_name2" type="text" class="validate">\n\t                      <label for="description_name">', '</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class="card-action">\n\t                <a  id="ids"  class="waves-effect waves-light btn" >', '</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id="fieldNone" class="modal">\n\t          \t<p style="text-align: center;">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id="fieldGood" class="modal">\n\t\t        <p style="font-weight: bolder; text-align: center;">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t'], ['\n  \t\t<div class="row " style="padding-top:80px; padding-left:20px; padding-right:20px;">\n\t    \t<div class="col s12 hide-on-med-and-up">\n\t          <div class="card">\n\t            <div class="card-image">\n\t              <img src="image1.png">\n\t            </div>\n\t            <div class="card-content">\n\t              <div class="row">\n\t                  <div class="input-field col s12">\n\t                    <input id="last_name" type="text" class="validate">\n\t                    <label for="last_name">name</label>\n\t                  </div>\n\t                  <div class="input-field col  s12">\n\t                    <input id="type_name" type="text" class="validate">\n\t                    <label for="type_name">tipo</label>\n\t                  </div>\n\t                  <div class="input-field col s12">\n\t                    <input id="date_name" type="text" class="datepicker">\n\t                    <label for="date_name">date</label>\n\t                  </div>\n\t                  <div class="input-field col  s12">\n\t                    <input id="description_name" type="text" class="validate">\n\t                    <label for="description_name">desp</label>\n\t                  </div>\n\t              </div>\n\t              <div class="card-action center-align">\n\t                <a id="id" class="waves-effect waves-light btn">Guardar</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class="col s12 center-align ">\n\t          <div class="card horizontal  hide-on-small-only">\n\t            <div class="card-image ">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-stacked">\n\t              <div class="card-content">\n\t                <form class="col s12">\n\t                  <div class="row">\n\t                    <div class="input-field col m4 l6">\n\t                      <input id="last_name2" type="text" class="validate">\n\t                      <label for="last_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col  m4 l6">\n\t                      <input id="type_name2" type="text" class="validate">\n\t                      <label for="type_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col m4 l6">\n\t                      <input id="date_name2" type="text" class="datepicker">\n\t                      <label for="date_name">', '</label>\n\t                    </div>\n\t                    <div class="input-field col m12 l6">\n\t                      <input id="description_name2" type="text" class="validate">\n\t                      <label for="description_name">', '</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class="card-action">\n\t                <a  id="ids"  class="waves-effect waves-light btn" >', '</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id="fieldNone" class="modal">\n\t          \t<p style="text-align: center;">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id="fieldGood" class="modal">\n\t\t        <p style="font-weight: bolder; text-align: center;">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t']);
+var _templateObject = _taggedTemplateLiteral(["\n  \t\t<div class=\"row \" style=\"padding-top:80px; padding-left:20px; padding-right:20px;\">\n\t    \t<div class=\"col s12 hide-on-med-and-up\">\n\t          <div class=\"card\">\n\t            <div class=\"card-image\">\n\t              <img src=", ">\n\t            </div>\n\t            <div class=\"card-content\">\n\t              <div class=\"row\">\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"last_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"last_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"type_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"type_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"date_name\" type=\"text\" class=\"datepicker\">\n\t                    <label for=\"date_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"description_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"description_name\">", "</label>\n\t                  </div>\n\t              </div>\n\t              <div class=\"card-action center-align\">\n\t                <a id=", " class=\"waves-effect waves-light btn\">", "</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class=\"col s12 center-align \">\n\t          <div class=\"card horizontal  hide-on-small-only\">\n\t            <div class=\"card-image \">\n\t              <img src=", ">\n\t            </div>\n\t            <div class=\"card-stacked\">\n\t              <div class=\"card-content\">\n\t                <form class=\"col s12\">\n\t                  <div class=\"row\">\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"last_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"last_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col  m4 l6\">\n\t                      <input id=\"type_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"type_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"date_name2\" type=\"text\" class=\"datepicker\">\n\t                      <label for=\"date_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m12 l6\">\n\t                      <input id=\"description_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"description_name\">", "</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class=\"card-action\">\n\t                <a  id=", "  class=\"waves-effect waves-light btn\" >", "</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id=\"fieldNone\" class=\"modal\">\n\t          \t<p style=\"text-align: center;\">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id=\"fieldGood\" class=\"modal\">\n\t\t        <p style=\"font-weight: bolder; text-align: center;\">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t"], ["\n  \t\t<div class=\"row \" style=\"padding-top:80px; padding-left:20px; padding-right:20px;\">\n\t    \t<div class=\"col s12 hide-on-med-and-up\">\n\t          <div class=\"card\">\n\t            <div class=\"card-image\">\n\t              <img src=", ">\n\t            </div>\n\t            <div class=\"card-content\">\n\t              <div class=\"row\">\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"last_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"last_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"type_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"type_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"date_name\" type=\"text\" class=\"datepicker\">\n\t                    <label for=\"date_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"description_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"description_name\">", "</label>\n\t                  </div>\n\t              </div>\n\t              <div class=\"card-action center-align\">\n\t                <a id=", " class=\"waves-effect waves-light btn\">", "</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class=\"col s12 center-align \">\n\t          <div class=\"card horizontal  hide-on-small-only\">\n\t            <div class=\"card-image \">\n\t              <img src=", ">\n\t            </div>\n\t            <div class=\"card-stacked\">\n\t              <div class=\"card-content\">\n\t                <form class=\"col s12\">\n\t                  <div class=\"row\">\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"last_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"last_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col  m4 l6\">\n\t                      <input id=\"type_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"type_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"date_name2\" type=\"text\" class=\"datepicker\">\n\t                      <label for=\"date_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m12 l6\">\n\t                      <input id=\"description_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"description_name\">", "</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class=\"card-action\">\n\t                <a  id=", "  class=\"waves-effect waves-light btn\" >", "</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id=\"fieldNone\" class=\"modal\">\n\t          \t<p style=\"text-align: center;\">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id=\"fieldGood\" class=\"modal\">\n\t\t        <p style=\"font-weight: bolder; text-align: center;\">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t"]);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral(strings, raw) {
+	return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
 
 var yo = require('yo-yo');
 
 module.exports = function newCurso(img, name, type_name, date_name, description_name, id, btnName) {
-
-	return yo(_templateObject, img, name, type_name, date_name, description_name, btnName);
+	var id2 = id + "2";
+	return yo(_templateObject, img, name, type_name, date_name, description_name, id, btnName, img, name, type_name, date_name, description_name, id2, btnName);
 };
 
 },{"yo-yo":13}],17:[function(require,module,exports){
 "use strict";
 
 // Initialize Firebase
+
 var config = {
   apiKey: "AIzaSyAP7YCpyEuV3p-mJUGnKVMb17j_0TMkbEo",
   authDomain: "e-learning-62f78.firebaseapp.com",
@@ -3064,28 +3071,31 @@ console.log("ready! Firebase");
 },{}],18:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['\n  \t\t<div class="container" >\n\t\t\t<div class="row">\n\t      \t\t<div class="row" id=', ' >\n\t\t\t        <div class="fixed-action-btn">\n\t\t\t         <a href=', ' class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n\t\t\t      \t</div>\n\t\t\t    </div>\n  \t\t\t</div> \n  \t\t</div>\n\t\t'], ['\n  \t\t<div class="container" >\n\t\t\t<div class="row">\n\t      \t\t<div class="row" id=', ' >\n\t\t\t        <div class="fixed-action-btn">\n\t\t\t         <a href=', ' class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n\t\t\t      \t</div>\n\t\t\t    </div>\n  \t\t\t</div> \n  \t\t</div>\n\t\t']);
+var _templateObject = _taggedTemplateLiteral(['\n  \t\t<div class="container" >\n\t\t\t<div class="row">\n\t      \t\t<div class="row" id=', ' >\n\t\t\t        <div class="fixed-action-btn">\n\t\t\t         <a class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n\t\t\t      \t</div>\n\t\t\t    </div>\n  \t\t\t</div> \n  \t\t</div>\n\t\t'], ['\n  \t\t<div class="container" >\n\t\t\t<div class="row">\n\t      \t\t<div class="row" id=', ' >\n\t\t\t        <div class="fixed-action-btn">\n\t\t\t         <a class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n\t\t\t      \t</div>\n\t\t\t    </div>\n  \t\t\t</div> \n  \t\t</div>\n\t\t']);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral(strings, raw) {
+		return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
 
 var yo = require('yo-yo');
 
-module.exports = function btnAdd(href, id) {
-		return yo(_templateObject, id, href);
+module.exports = function btnAdd(id) {
+		return yo(_templateObject, id);
 };
 
 },{"yo-yo":13}],19:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['\n  \t\t<a href=', ' style="text-decoration:none;color:black;">\n\t        <div class="col s6 m4 l3" >\n\t          <div class="card hoverable">\n\t            <div class="card-image">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-content">\n\t              <span class="card-title">', '</span>\n\t              <p> ', ' </p>\n\t            </div>\n\t          </div>\n\t        </div>\n\t    </a>\n\t\t'], ['\n  \t\t<a href=', ' style="text-decoration:none;color:black;">\n\t        <div class="col s6 m4 l3" >\n\t          <div class="card hoverable">\n\t            <div class="card-image">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-content">\n\t              <span class="card-title">', '</span>\n\t              <p> ', ' </p>\n\t            </div>\n\t          </div>\n\t        </div>\n\t    </a>\n\t\t']);
+var _templateObject = _taggedTemplateLiteral(['\n  \t\t\n\t        <div class="col s6 m4 l3 curso"  alt=', '>\n\t          <div class="card hoverable">\n\t            <div class="card-image">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-content">\n\t              <span class="card-title">', '</span>\n\t              <p> ', ' </p>\n\t            </div>\n\t          </div>\n\t        </div>\n\t  \n\t\t'], ['\n  \t\t\n\t        <div class="col s6 m4 l3 curso"  alt=', '>\n\t          <div class="card hoverable">\n\t            <div class="card-image">\n\t              <img src=', '>\n\t            </div>\n\t            <div class="card-content">\n\t              <span class="card-title">', '</span>\n\t              <p> ', ' </p>\n\t            </div>\n\t          </div>\n\t        </div>\n\t  \n\t\t']);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral(strings, raw) {
+		return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
 
 var yo = require('yo-yo');
 
-module.exports = function card(href, key, name, img, date) {
-	var hrefaux = href + key;
-	return yo(_templateObject, hrefaux, img, name, date);
+module.exports = function card(key, name, img, date) {
+		return yo(_templateObject, key, img, name, date);
 };
 
 },{"yo-yo":13}],20:[function(require,module,exports){
@@ -3152,7 +3162,9 @@ module.exports = function writeImageDom(datos, itemPorPagina, numeroImagenes, in
 
 var _templateObject = _taggedTemplateLiteral(['\n  \t\t<footer class=" footerRow page-footer">\n\t\t  <div class="container">\n\t\t      <div class="row">\n\n\t\t        <div id="paginas" class="col s12 center-align" style="padding-top: 50px; ">\n\t\t          \n\t\t        </div>\n\t\t      \n\t\t      </div>\n\t\t    </div>\n\t\t </footer>\n\t\t'], ['\n  \t\t<footer class=" footerRow page-footer">\n\t\t  <div class="container">\n\t\t      <div class="row">\n\n\t\t        <div id="paginas" class="col s12 center-align" style="padding-top: 50px; ">\n\t\t          \n\t\t        </div>\n\t\t      \n\t\t      </div>\n\t\t    </div>\n\t\t </footer>\n\t\t']);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral(strings, raw) {
+  return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
 
 var yo = require('yo-yo');
 
@@ -3163,7 +3175,9 @@ module.exports = yo(_templateObject);
 
 var _templateObject = _taggedTemplateLiteral(['\n\t  <div class="navbar-fixed ">\n\t   \t<nav>\n\t\t    <div class="header nav-wrapper ">\n\t\t       <a href="#" class="brand-logo center" style="font-weight: 700;">', '</a>\n\t\t    </div>\n\t  \t</nav>\n\t  </div>\n    '], ['\n\t  <div class="navbar-fixed ">\n\t   \t<nav>\n\t\t    <div class="header nav-wrapper ">\n\t\t       <a href="#" class="brand-logo center" style="font-weight: 700;">', '</a>\n\t\t    </div>\n\t  \t</nav>\n\t  </div>\n    ']);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral(strings, raw) {
+	return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
 
 var yo = require('yo-yo');
 
@@ -3175,12 +3189,14 @@ module.exports = function header(name) {
 },{"yo-yo":13}],23:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['\n\t      <div class="container" >\n\t\t\t\t<div class="row">\n\t\t      \t\t<div class="row" id="addPhoto" >\n\t\t\t\t\t\t\n\t\t      \t\t</div>\n\t  \t\t\t</div> \n\t  \t  </div>\n      '], ['\n\t      <div class="container" >\n\t\t\t\t<div class="row">\n\t\t      \t\t<div class="row" id="addPhoto" >\n\t\t\t\t\t\t\n\t\t      \t\t</div>\n\t  \t\t\t</div> \n\t  \t  </div>\n      ']),
+var _templateObject = _taggedTemplateLiteral(['\n    <div class="container" >\n    <div class="row">\n          <div class="row" id="addPhoto" >\n        \n          </div>\n      </div> \n    </div>\n  '], ['\n    <div class="container" >\n    <div class="row">\n          <div class="row" id="addPhoto" >\n        \n          </div>\n      </div> \n    </div>\n  ']),
     _templateObject2 = _taggedTemplateLiteral(['<ul class="pagination" id="pagina">\n                          </ul>'], ['<ul class="pagination" id="pagina">\n                          </ul>']),
     _templateObject3 = _taggedTemplateLiteral(['<li class="waves-effect">\n                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>\n                    </li>'], ['<li class="waves-effect">\n                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>\n                    </li>']),
     _templateObject4 = _taggedTemplateLiteral(['<li class="waves-effect">\n                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>\n                    </li>'], ['<li class="waves-effect">\n                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>\n                    </li>']);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral(strings, raw) {
+  return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
 
 var page = require('page');
 
@@ -3192,12 +3208,13 @@ var cursos = require('./cursos');
 var card = require('./card');
 var footerTemplate = require('./footer');
 
-var imagesFBRef = firebase.database().ref().child('curso').orderByKey();
-var paginaActual = 1;
-
 var header = document.getElementById('header-container');
 var main = document.getElementById('main-container');
 var footer = document.getElementById('footer-container');
+
+var imagesFBRef = firebase.database().ref().child('curso').orderByKey();
+var paginaActual = 1;
+var itemPorPagina = 8;
 
 page('/', function (ctx, next) {
   load();
@@ -3220,12 +3237,10 @@ function loadImages() {
   imagesFBRef.on("value", function (snapshot) {
 
     var datos = snapshot.val();
-    // load paginador
-    var itemPorPagina = 8;
 
     if (datos == null) {
       empty(main).appendChild(templateEmpty);
-      //paginato(0,1);
+      loadFooter(0, paginaActual);
     } else {
 
       var numeroImagenes = Object.keys(datos).length;
@@ -3233,36 +3248,54 @@ function loadImages() {
       console.log("numeroImagenes", numeroImagenes);
       console.log("itemPorPagina", itemPorPagina);
       console.log("numeroPaginas", numeroPaginas);
-
-      var aux = yo(_templateObject);
-
-      main.appendChild(aux);
-
-      var content = document.getElementById('addPhoto');
-      content.appendChild(btnAdd("curso", "btnAdd"));
-
       var inicio = 0;
-      var i = 0;
-      var final = 0;
-      if (inicio + itemPorPagina > numeroImagenes) {
-        final = numeroImagenes;
-      } else {
-        final = inicio + itemPorPagina;
-      }
-      console.log('final', final);
-      console.log('inicio', inicio);
 
-      for (var key in datos) {
-        if (i >= inicio && i < final) {
-          content.appendChild(card("curso?curso=", key, datos[key].name, datos[key].img, datos[key].date));
-          console.log("url", key);
-        }
-        i = i + 1;
-      }
+      writeImage(datos, itemPorPagina, numeroImagenes, inicio);
 
       loadFooter(numeroPaginas, paginaActual);
     }
+
+    $('.curso').click(function () {
+      var auxKey = $('.curso').attr("alt");
+      console.log('btnCurso');
+      console.log('key:', auxKey);
+      window.open("curso?curso=" + auxKey, "_self");
+    });
+
+    $('#btnAdd').click(function () {
+      console.log('btnAdd');
+      window.open("curso", "_self");
+      //window.open("curso?curso=uno","_self");
+    });
   });
+}
+
+function writeImage(datos, itemPorPagina, numeroImagenes, inicio) {
+
+  var aux = yo(_templateObject);
+
+  empty(main).appendChild(aux);
+
+  var content = document.getElementById('addPhoto');
+  content.appendChild(btnAdd("btnAdd"));
+
+  var i = 0;
+  var final = 0;
+  if (inicio + itemPorPagina > numeroImagenes) {
+    final = numeroImagenes;
+  } else {
+    final = inicio + itemPorPagina;
+  }
+  console.log('final', final);
+  console.log('inicio', inicio);
+
+  for (var key in datos) {
+    if (i >= inicio && i < final) {
+      content.appendChild(card(key, datos[key].name, datos[key].img, datos[key].date));
+      console.log("url", key);
+    }
+    i = i + 1;
+  }
 }
 
 function loadFooter(numeroPaginas, paginaActual) {
@@ -3295,6 +3328,35 @@ function loadFooter(numeroPaginas, paginaActual) {
         li.appendChild(numbers(i, "waves-effect"));
       }
     }
+    li.appendChild(right);
+
+    $('#btnRight').click(function () {
+      if (paginaActual == numeroPaginas) {} else {
+        var aux = '#pag_' + paginaActual;
+        $(aux).removeClass("active");
+        paginaActual = paginaActual + 1;
+        var inicioItems = itemPorPagina * (paginaActual - 1);
+        console.log("btnRight");
+        console.log("paginaActual", paginaActual);
+        var aux = '#pag_' + paginaActual;
+        $(aux).addClass("active");
+        // writeImageDom(datos,itemPorPagina,numeroImagenes,inicioItems);
+      }
+    });
+
+    $('#btnLeft').click(function () {
+      if (paginaActual == 1) {} else {
+        var aux = '#pag_' + paginaActual;
+        $(aux).removeClass("active");
+        paginaActual = paginaActual - 1;
+        var inicioItems = itemPorPagina * (paginaActual - 1);
+        console.log("btnLeft");
+        console.log("paginaActual", paginaActual);
+        var aux = '#pag_' + paginaActual;
+        $(aux).addClass("active");
+        // writeImageDom(datos,itemPorPagina,numeroImagenes,inicioItems);
+      }
+    });
   }
 }
 
@@ -3303,7 +3365,9 @@ function loadFooter(numeroPaginas, paginaActual) {
 
 var _templateObject = _taggedTemplateLiteral(["\n    <li id=", " class=", "><a>", "</a></li>\n    "], ["\n    <li id=", " class=", "><a>", "</a></li>\n    "]);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral(strings, raw) {
+   return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
 
 var yo = require('yo-yo');
 
@@ -3315,9 +3379,11 @@ module.exports = function pagination(i, className) {
 },{"yo-yo":13}],25:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['\n\t<div class="container" >\n\t\t<div class="row">\n      <div class="row" id="addPhoto" >\n   \t\t\t  <div class="fixed-action-btn">\n     \t\t\t\t<a href="curso.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n   \t\t\t\t</div>\n    \t\t\t<br>\n    \t\t\t<h3 style="padding: 10px;" > No hay cursos disponibles</h3>\n  \t\t</div>\n  \t</div> \n  </div>  \n'], ['\n\t<div class="container" >\n\t\t<div class="row">\n      <div class="row" id="addPhoto" >\n   \t\t\t  <div class="fixed-action-btn">\n     \t\t\t\t<a href="curso.php" class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n   \t\t\t\t</div>\n    \t\t\t<br>\n    \t\t\t<h3 style="padding: 10px;" > No hay cursos disponibles</h3>\n  \t\t</div>\n  \t</div> \n  </div>  \n']);
+var _templateObject = _taggedTemplateLiteral(['\n\t<div class="container" >\n\t\t<div class="row">\n      <div class="row" id="addPhoto" >\n   \t\t\t  <div class="fixed-action-btn">\n     \t\t\t\t<a class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n   \t\t\t\t</div>\n    \t\t\t<br>\n    \t\t\t<h3 style="padding: 10px;" > No hay cursos disponibles</h3>\n  \t\t</div>\n  \t</div> \n  </div>  \n'], ['\n\t<div class="container" >\n\t\t<div class="row">\n      <div class="row" id="addPhoto" >\n   \t\t\t  <div class="fixed-action-btn">\n     \t\t\t\t<a class="btn-floating btn-large waves-effect waves-light" id="btnAdd"><i class="material-icons">add</i></a>\n   \t\t\t\t</div>\n    \t\t\t<br>\n    \t\t\t<h3 style="padding: 10px;" > No hay cursos disponibles</h3>\n  \t\t</div>\n  \t</div> \n  </div>  \n']);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function _taggedTemplateLiteral(strings, raw) {
+  return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
 
 var yo = require('yo-yo');
 

@@ -3,7 +3,7 @@ var page = require('page');
 var yo = require('yo-yo');
 var empty = require('empty-element');
 var templateNewCurso = require('./newCurso');
-//var btnAdd = require('./btnAdd');
+var btnAdd = require('../home/btnAdd');
 
 var footerTemplate= require('../home/footer');
 
@@ -11,6 +11,10 @@ var header = document.getElementById('header-container');
 var main = document.getElementById('main-container');
 var footer = document.getElementById('footer-container');
 var FBRef;
+
+var url = window.location.href;
+let params = new URL(url).searchParams;
+var cursoKey = params.get('curso'); 
 
 page('/curso', function(ctx,next){	
 	load();
@@ -24,23 +28,20 @@ function load(ctx,next){
 
 function headerLoad(){
   var headerTemplate= require('../home/header');
-  empty(header).appendChild(headerTemplate('CURSOS'));
+  empty(header).appendChild(headerTemplate('CURSO'));
 }
 
-
 function loadImages(){
-  var url = window.location.href;
-  let params = new URL(url).searchParams;
-  var cursoKey = params.get('curso'); 
+  
 
-  console.log( "ready Clases!" );   
-  console.log( "cursoKey" ,cursoKey);   
+  console.log( "ready Clases!" );
+  console.log( "url:" ,url);    
+  console.log( "cursoKey:" ,cursoKey);   
 
   if (cursoKey == null) {
       console.log( "load newCurso" );   
       loadNewCurse();
       loadFooter(0,0);
-
   } else {
      // loadCurse(cursoKey);
   }
@@ -50,13 +51,13 @@ function loadImages(){
 
 function loadNewCurse(){
 
-  //FBRef = firebase.database().ref().child('curso/'); 
+  FBRef = firebase.database().ref().child('curso/'); 
 
+  console.log('FBRef:', FBRef);
   const aux = yo`
       <div class="container" >
       <div class="row">
             <div class="row" id="addPhoto" >
-            <h1 style="color:white"> Vacio </h1>
             </div>
         </div> 
       </div>
@@ -66,8 +67,8 @@ function loadNewCurse(){
 
   var content = document.getElementById('addPhoto');
 
-  content.appendChild(templateNewCurso("image1.png", 'vicio','tipo','fecha','Debes','idad','Guardado'));
-/*
+  content.appendChild(templateNewCurso("image1.png", 'Nombre','Tipo','Fecha','Descripción','btnSave','Guardado'));
+
   $('#btnSave').click(function(){
     btnSave();
   });
@@ -79,7 +80,7 @@ function loadNewCurse(){
   });
 
   datapickerInit();
-  */
+
 
 }
 /*
@@ -276,7 +277,7 @@ function guardarInfo(name, type,date,img,description){
 
     var cursoKeyAux = aux.getKey();
     console.log("push key:", cursoKeyAux);
-    window.open("curso.php?curso="+cursoKeyAux,"_self");
+    window.open("curso?curso="+cursoKeyAux,"_self");
 }
 
 function datapickerInit(){
