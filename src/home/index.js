@@ -12,19 +12,30 @@ var header = document.getElementById('header-container');
 var main = document.getElementById('main-container');
 var footer = document.getElementById('footer-container');
 
-var imagesFBRef = firebase.database().ref().child('curso').orderByKey();
-var paginaActual = 1;
-var itemPorPagina = 8;
 
+var itemPorPagina = 12;
+var referenceToOldestKey = true;
 page('/', function(ctx,next){	
 	load();
 });
 
 function load(ctx,next){
-	
+  
+  referenceToOldestKey = true;
 	console.log("Home page");	 
   headerLoad(); 
+
+  loadPage();
   loadImages();
+ 
+  footer.appendChild(footerTemplate);
+
+  $('#btnAdd').click(function(){ 
+   console.log('btnAdd');
+   sessionStorage.setItem('curso', 'null');
+   page('/curso');
+   //window.open("curso","_self");
+  });
 
 }
 
@@ -35,52 +46,7 @@ function headerLoad(){
 
 }
 
-function loadImages(){
-  imagesFBRef.on("value",function(snapshot){
-
-    var datos = snapshot.val();
-
-    if (datos == null){
-      empty(main).appendChild(templateEmpty ); 
-      loadFooter(0,paginaActual);
-
-    }else {
-
-      const numeroImagenes = Object.keys(datos).length;
-      const numeroPaginas = Math.ceil(numeroImagenes/itemPorPagina) ;
-      console.log("numeroImagenes",numeroImagenes);
-      console.log("itemPorPagina",itemPorPagina);
-      console.log("numeroPaginas",numeroPaginas);
-      const inicio = 0;
-      
-      writeImage(datos, itemPorPagina,numeroImagenes,inicio)
-
-      loadFooter(numeroPaginas,paginaActual);
-
-    }
-
-    $('.curso').click(function(){ 
-     const auxKey = $('.curso').attr("alt"); 
-     console.log('btnCurso');
-     console.log('key:', auxKey);
-     window.open("curso?curso="+auxKey,"_self");
-
-    });
-
-    $('#btnAdd').click(function(){ 
-     console.log('btnAdd');
-     window.open("curso","_self");
-       //window.open("curso?curso=uno","_self");
-    });
-
-
-  });
-
-}
-
-
-function writeImage(datos, itemPorPagina,numeroImagenes,inicio){
-
+function loadPage(){
   const aux = yo`
     <div class="container" >
     <div class="row">
@@ -91,106 +57,189 @@ function writeImage(datos, itemPorPagina,numeroImagenes,inicio){
     </div>
   `;
 
-  empty(main).appendChild(aux);
+  main.appendChild(aux);
 
+}
+
+function loadImages(){
   var content = document.getElementById('addPhoto');
-  content.appendChild(btnAdd("btnAdd"));
+  
+  console.log("referenceToOldestKey If: ",referenceToOldestKey);
+  if (referenceToOldestKey == true) { // if initial fetch
 
-  var i = 0;
-  var final = 0;
-  if ( (inicio+itemPorPagina)>numeroImagenes){
-    final = numeroImagenes; 
-  } else {
-    final = inicio+itemPorPagina;
-  }
-  console.log('final', final);
-  console.log('inicio', inicio);
+  var imagesFBRef = firebase.database().ref().child('curso')
+    .orderByKey()
+    .limitToLast(itemPorPagina)
 
+  imagesFBRef.once("value",function(snapshot){
+
+    var datos = snapshot.val();
+
+    var arrayOfKeys = Object.keys(snapshot.val())
+         .sort()
+         .reverse();
+      
+    // transforming to array
+    var results = arrayOfKeys
+       .map((key) => snapshot.val()[key]);
+   // console.log('datos:',datos ); 
+   // console.log('arrayOfKeys:',arrayOfKeys); 
+   // console.log('results:',results );  
+
+    // storing reference
+    referenceToOldestKey = arrayOfKeys[arrayOfKeys.length-1];
+    console.log("referenceToOldestKey Inside: ",referenceToOldestKey);
+    datos = results;
+
+    if (datos == null){
+      empty(content).appendChild(templateEmpty ); 
+   
+    }else {
+      writeImage(datos,arrayOfKeys);
+    }
+
+  });
+
+
+}else if (!referenceToOldestKey){
+  // para no recargar dos veces la image
+   
+}
+else {
+  var content = document.getElementById('addPhoto');
+
+  console.log("referenceToOldestKey Inside: ",referenceToOldestKey);
+
+  var imagesFBRef = firebase.database().ref().child('curso')
+    .orderByKey()
+    .endAt(referenceToOldestKey)
+    .limitToLast(itemPorPagina)
+
+  imagesFBRef.once("value",function(snapshot){
+
+    var datos = snapshot.val();
+    console.log('datos:',datos ); 
+    var arrayOfKeys = Object.keys(snapshot.val())
+         .sort()
+         .reverse();
+      
+    // changing to reverse chronological order (latest first)
+    // & removing duplicate
+    var arrayOfKeys = Object.keys(snapshot.val())
+       .sort()
+       .reverse()
+       .slice(1);
+    // transforming to array
+    var results = arrayOfKeys
+       .map((key) => snapshot.val()[key]);
+    // updating reference
+
+    // console.log('arrayOfKeys:',arrayOfKeys); 
+    //console.log('results:',results ); 
+
+    referenceToOldestKey = arrayOfKeys[arrayOfKeys.length-1];
+
+    datos = results;
+
+    if (datos == null){
+      empty(content).appendChild(templateEmpty ); 
+    }else {
+       writeImage(datos,arrayOfKeys);
+    }
+    
+
+  });
+
+
+}
+
+}
+
+
+function writeImage(datos, keys){
+  var content = document.getElementById('addPhoto');
+  var i =0;
   for (var key in datos){
-    if (i >= inicio && i< final){
-      content.appendChild(card(key,datos[key].name,datos[key].img,datos[key].date));
-      console.log("url",key);
-    }
-    i= i+1;  
+    
+    content.appendChild(card(keys[i],datos[key].name,datos[key].img,datos[key].date));
+    console.log("url",keys[key]);
+    i++;
   } 
 
-
+  $('.curso').click(function(){ 
+   const auxKey = $(this).attr("alt"); 
+   console.log('btnCurso');
+   console.log('auxKey:', auxKey);
+   empty(main);
+   
+   sessionStorage.setItem("curso", auxKey);
+   page('/curso');
+  });
 }
 
+$(window).scroll(function() {
+     if($(window).scrollTop() + $(window).height() == getDocHeight()) {
+         //alert("bottom! ok");
+      
+        console.log("bottom! ok");
+        loadImages();
+     }
+    
 
-function loadFooter(numeroPaginas, paginaActual){
-  footer.appendChild(footerTemplate);
-  var paginas = document.getElementById('paginas');
+ });
 
-  if(numeroPaginas == 0 | numeroPaginas == 1)
-  {
-    console.log("Sin paginas");
-  } 
-  else {
-    var resultado = "";
-    var liPaginas ="";
-    console.log("numeroPaginas",numeroPaginas);
-    console.log("paginaActual",paginaActual);
 
-    const  pagination = yo`<ul class="pagination" id="pagina">
-                          </ul>`;
-
-    paginas.appendChild(pagination);          
-    var li = document.getElementById('pagina');
-
-    const  left = yo`<li class="waves-effect">
-                      <a id="btnLeft"><i class="material-icons">chevron_left</i></a>
-                    </li>`;
-    const  right= yo`<li class="waves-effect">
-                      <a id="btnRight" ><i class="material-icons">chevron_right</i></a>
-                    </li>`;
-    li.appendChild(left);
-
-    var numbers = require('./pagination');
-
-    for (var i = 1; i <= numeroPaginas; i++){
-      if (i == paginaActual){
-        li.appendChild(numbers(i,"active")); 
-        }else {
-        li.appendChild(numbers(i,"waves-effect")); 
-      } 
-    }
-    li.appendChild(right);
-
-    $('#btnRight').click(function(){
-        if (paginaActual == numeroPaginas){
-        }else {
-          var aux = `#pag_`+paginaActual;
-          $(aux).removeClass("active");
-          paginaActual = paginaActual +1;
-          var inicioItems = itemPorPagina * (paginaActual-1 )  ;
-          console.log("btnRight");
-          console.log("paginaActual", paginaActual);
-          var aux = `#pag_`+paginaActual;
-          $(aux).addClass("active");
-         // writeImageDom(datos,itemPorPagina,numeroImagenes,inicioItems);
-        }
-      });
-
-      $('#btnLeft').click(function(){
-          if (paginaActual == 1){
-          }else {
-            var aux = `#pag_`+paginaActual;
-            $(aux).removeClass("active");
-            paginaActual = paginaActual -1;
-            var inicioItems = itemPorPagina * (paginaActual-1 ) ;
-            console.log("btnLeft");
-            console.log("paginaActual", paginaActual);
-            var aux = `#pag_`+paginaActual;
-            $(aux).addClass("active");
-           // writeImageDom(datos,itemPorPagina,numeroImagenes,inicioItems);
-          }
-      });
-
+function getDocHeight() {
+  var D = document;
+  return Math.max(
+      D.body.scrollHeight, D.documentElement.scrollHeight,
+      D.body.offsetHeight, D.documentElement.offsetHeight,
+      D.body.clientHeight, D.documentElement.clientHeight
+  );
   }
-}
+
+/*
+$('.curso').click(function(){ 
+ const auxKey = $('.curso').attr("alt"); 
+ console.log('btnCurso');
+ //console.log('key:', auxKey);
+ //window.open("curso?curso="+auxKey,"_self");
+ sessionStorage.setItem("curso", "auxKey");
+ page('/curso');
+});
+
+$('#btnAdd').click(function(){ 
+ console.log('btnAdd');
+ sessionStorage.setItem("curso", "new Storage");
+ page('/curso');
+ //window.open("curso","_self");
+});
 
 
+    $('#btnAdd').click(function(){ 
+     console.log('btnAdd');
+     sessionStorage.setItem("curso", "new Storage");
+     page.redirect('/curso');
+     
+     //window.open("curso","_self");
+    });
+
+  $(window).scroll(function() {
+       if($(window).scrollTop() + $(window).height() == getDocHeight()) {
+           //alert("bottom!");
+          loadImages();
+          console.log("bottom!");
+       }
+      $('#btnAdd').click(function(){ 
+     console.log('btnAdd');
+     sessionStorage.setItem("curso", "new Storage");
+     page('/curso');
+     //window.open("curso","_self");
+    });
+
+   });
+
+*/
 
 
 
