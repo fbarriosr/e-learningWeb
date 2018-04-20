@@ -38,7 +38,7 @@ var id2 = id +"2";
 	         <div class="col s12 center-align ">
 	          <div class="card horizontal  hide-on-small-only">
 	            <div class="card-image ">
-	              <img src=${img}>
+	             <input type="file" id="input2" class="dropify">
 	            </div>
 	            <div class="card-stacked">
 	              <div class="card-content">

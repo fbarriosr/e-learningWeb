@@ -1,31 +1,47 @@
 var page = require('page');
 
 var yo = require('yo-yo');
+
 var empty = require('empty-element');
-var templateNewCurso = require('./newCurso');
-var btnAdd = require('../home/btnAdd');
-var card= require('../home/card');
 
-var footerTemplate= require('../home/footer');
 
-var header = document.getElementById('header-container');
+
 var main = document.getElementById('main-container');
-var footer = document.getElementById('footer-container');
+
 var FBRef;
 
-var cursoKey = sessionStorage.getItem("curso");
+var cursoKey ;
+
+var imagenName = "";
+
+var file = null;
 
 page('/curso', function(ctx,next){	
+  require('dropify/dist/js/dropify.js');
+
+  cursoKey = sessionStorage.getItem("curso");
 	load();
 });
 
 function load(ctx,next){
- 
+  console.log('----------Curso page--------');
   console.log("Curso Storage:", cursoKey);  
-	console.log("Curso page");	
-  headerLoad(); 
-  loadImages();
 
+  loadHeader();
+  loadPage();
+
+  loadImages();
+   
+  loadFooter();
+  console.log('++++++++++Curso page++++++++'); 
+  $('.dropify').dropify();
+  $('.dropify-clear').hide();
+  $('.dropify-infos').hide();
+
+  
+}
+
+function btnActios(){
   $('#btnSave').click(function(){
     btnSave();
   });
@@ -35,21 +51,70 @@ function load(ctx,next){
   $('#fieldGood').find('#close-modal').click(function(event){
     EventGood(event);
   });
-
   datapickerInit();
+  $('.dropify').dropify();
+
+  $('#input2').on('change',function (){
+      var filePath = $(this).val();
+      console.log(filePath);
+  });
+
+  var fileButton = document.getElementById('input2');
+  
+  fileButton.addEventListener('change', function(e){
+
+    // get file
+
+    file = e.target.files[0];
+
+    var nameRand = Math.floor((Math.random() * 100000000) + 1);
+
+    imagenName = nameRand+'_'+file.name;
+    console.log('file',file);
+    console.log('image',imagenName);
+
+  });
 }
 
-function headerLoad(){
-  var headerTemplate = require('./header');
+function loadHeader(){
+  console.log('------------loadHeader() ------------');
+  const empty = require('empty-element'); 
+  const headerTemplate= require('./header');
+  const header = document.getElementById('header-container');
   empty(header).appendChild(headerTemplate('CURSO'));
-  //footer.appendChild(footerTemplate);
+  console.log('************loadHeader() ************');
 
- $('#btnBack').click(function(){ 
+  $('#btnBack').click(function(){ 
    console.log('btnBack');
    var content = document.getElementById('addPhoto');
    empty(content);
    page('/');
- });
+  });
+}
+
+function loadFooter(){
+  console.log('------------loadFooter() ------------');
+  const empty = require('empty-element');
+  const footer = document.getElementById('footer-container');
+  const footerTemplate= require('../home/footer');
+  empty(footer).appendChild(footerTemplate);
+  console.log('************loadFooter() ************');
+}
+
+function loadPage(){
+  console.log('------------loadPage() ------------');
+  const aux = yo`
+    <div class="container" >
+    <div class="row">
+          <div class="row" id="addPhoto" >
+        
+          </div>
+      </div> 
+    </div>
+  `;
+  const main = document.getElementById('main-container');
+  main.appendChild(aux);
+  console.log('************loadPage() ************');
 }
 
 function loadImages(){
@@ -63,73 +128,59 @@ function loadImages(){
       console.log( "load Curso:  " ); 
       loadCurse(cursoKey);
   }
-  //var content = document.getElementById('addPhoto');
-  //content.appendChild(btnAdd("btnAdd"));
+
 }
 
 function loadNewCurse(){
-  FBRef = firebase.database().ref().child('curso/'); 
-  console.log('FBRef:', FBRef);
-  const aux = yo`
-      <div class="container" >
-      <div class="row">
-            <div class="row" id="addPhoto" >
-            </div>
-        </div> 
-      </div>
-    `;
-  empty(main).appendChild(aux); 
   var content = document.getElementById('addPhoto');
-  empty(content).appendChild(templateNewCurso("image1.png", 'Nombre','Tipo','Fecha','Descripción','btnSave','Guardado'));
+  var templateNewCurso = require('./newCurso');
+
+  empty(content).appendChild(templateNewCurso("image1.png", 'Nombre','Tipo','Fecha','Descripción','btnSave','Guardado')); 
+  btnActios();
 }
 
 function loadCurse(cursoKey){
-  var FBRef;
-  FBRef = firebase.database().ref().child('curso/'+cursoKey); 
-  FBRef.once("value",function(snapshot){
-    var datos = snapshot.val();
-    var claseKey = null;
+  return firebase.database().ref().child('curso/'+cursoKey)
+                            .once('value')
+                            .then(function(result){
+                              var datos = result.val();
+                              if (datos == null){
+                                const aux = yo`
+                                          <h3 style="padding: 10px;" > Error de la key</h3>
+                                `;
+                                empty(main).appendChild(aux); 
+                                return null;
+                              }else {
+                                console.log('Datos then:',datos);
+                                 var content = document.getElementById('addPhoto');
+                                 var templateNewCurso = require('./newCurso');
+                                 empty(content).appendChild(templateNewCurso("image1.png", datos.name,datos.type,datos.date,datos.description,'btnUpdate','Actualizar'));
+                                 return true;
+                              }
+                            })
+                            .then(function(dato)  {
+                              if (dato != null) {
+                                $('#btnUpdate').click(function(){
+                                  btnUpdate(cursoKey);
+                                });
+                                $('#btnUpdate2').click(function(){
+                                  btnUpdate2(cursoKey);
+                                });
+                                datapickerInit();
+                                $('.dropify').dropify();
+                              }
+                              
+                               
+                            })
+                            .catch(function(err){
+                              console.log('Error', err.code);
+                            })
 
-    var itemPorPagina = 8;
-
-    if (datos == null){
-      const aux = yo`
-        <div class="container" >
-        <div class="row">
-              <div class="row" id="addPhoto" >
-                <br>
-                <h3 style="padding: 10px;" > Error de la key</h3>
-              </div>
-          </div> 
-        </div>
-      `;
-      empty(main).appendChild(aux); 
-    }else {
-      const aux = yo`
-	      <div class="container" >
-				<div class="row">
-		      		<div class="row" id="addPhoto" >
-						
-		      		</div>
-	  			</div> 
-	  	  </div>
-      `;
-  	  empty(main).appendChild(aux);
-      var content = document.getElementById('addPhoto');
-      empty(content).appendChild(templateNewCurso("image1.png", datos.name,datos.type,datos.date,datos.description,'btnSave','Actualizar'));
-
-    
-
-    }
-  });
 }
 
 
-
-
-function btnSave(){
-  console.log("DATA ");
-
+function btnUpdate(cursoKey){
+  console.log("-***btnSave**-");
   var name = $('#last_name').val();
   var type = $('#type_name').val();  
   var date = $('#date_name').val();
@@ -145,16 +196,18 @@ function btnSave(){
 
   if (name == "" || type_name == "" || date == "" || img == "" || description == ""  ){
      console.log("vacio ");  
-     alert("Debes Completar los campos pedidos");
+     $('#fieldNone').modal('open');  
   }else { 
-     guardarInfo(name,type,date,img,description);
+     const FBRefaux =firebase.database().ref().child('curso/'+cursoKey); 
+     console.log('FBRef:', FBRefaux);
+     actualizarInfo(FBRefaux,name,type,date,img,description);
   }
 }
 
 
-function btnSave2(){
-  console.log("DATA ");
+function btnUpdate2(cursoKey){
   
+  console.log("-***btnSave**-");
   var name = $('#last_name2').val();
   var type = $('#type_name2').val();  
   var date = $('#date_name2').val();
@@ -170,40 +223,129 @@ function btnSave2(){
 
   if (name == "" || type_name == "" || date == "" || img == "" || description == ""  ){
      console.log("vacio ");  
-     //alert("Debes Completar los campos pedidos");
      $('#fieldNone').modal('open');
-
   }else { 
-     guardarInfo(name,type,date,img,description);
+     const FBRefaux =firebase.database().ref().child('curso/'+cursoKey); 
+     console.log('FBRef:', FBRefaux);   
+     actualizarInfo(FBRefaux,name,type,date,img,description);
   }
 }
 
 
 
+function btnSave(){
+  console.log("-***btnSave**-");
+  var name = $('#last_name').val();
+  var type = $('#type_name').val();  
+  var date = $('#date_name').val();
+  var description = $('#description_name').val();
+  var img = "https://firebasestorage.googleapis.com/v0/b/e-learning-62f78.appspot.com/o/image1.png?alt=media&token=d145adf4-30f4-4295-8a8f-e74971e4b27b";
 
+  console.log("DATA ");
+  console.log("name: ",name);
+  console.log("type: ",type);
+  console.log("date: ",date);
+  console.log("img: ",img);
+  console.log("description: ",description);
 
-function EventGood(event){
-    event.preventDefault();
-    location.reload();
-    console.log('good');
+  if (name == "" || type_name == "" || date == "" || img == "" || description == ""  ){
+     console.log("vacio ");  
+     $('#fieldNone').modal('open');  
+  }else { 
+     const FBRefaux =firebase.database().ref().child('curso/'); 
+     console.log('FBRef:', FBRefaux);
+     guardarInfo(FBRefaux,name,type,date,img,description);
+  }
 }
 
-function guardarInfo(name, type,date,img,description){ 
-   var aux= FBRef.push({
+
+function btnSave2(){
+  
+  console.log("-***btnSave**-");
+  var name = $('#last_name2').val();
+  var type = $('#type_name2').val();  
+  var date = $('#date_name2').val();
+  var description = $('#description_name2').val();
+  var img =  imagenName;
+
+  console.log("DATA ");
+  console.log("name: ",name);
+  console.log("type: ",type);
+  console.log("date: ",date);
+  console.log("img: ",img);
+  console.log("description: ",description);
+
+  if (name == "" || type_name == "" || date == "" || img == "" || description == "" || img == "" ){
+     console.log("vacio ");  
+     $('#fieldNone').modal('open');
+  }else { 
+     const FBRefaux =firebase.database().ref().child('curso/'); 
+     console.log('FBRef:', FBRefaux);   
+     guardarInfo(FBRefaux,name,type,date,img,description);
+  }
+}
+
+
+function guardarInfo(FBRefaux,name, type,date,imgName,description){ 
+   var aux= FBRefaux.push({
+    name: name,
+    type: type,
+    date: date,
+    img: null,
+    description: description
+    });
+   
+    console.log('Guardado');
+   
+
+   
+    imgName = Math.floor((Math.random() * 100000000) + 1) + '_' + imgName ;
+    console.log('imgName',imgName);
+
+    $('#fieldGood').modal('open');
+    var cursoKeyAux = aux.getKey();
+    console.log("push key:", cursoKeyAux);
+    sessionStorage.setItem("curso", "cursoKeyAux");
+
+    var storageRef = firebase.storage().ref('cursos/' + imgName);
+
+    // upload file
+
+    var task = storageRef.put(file);
+
+    task.on('state_changed',
+
+        function progress(snapshot){
+            var porcentaje = (snapshot.bytesTransferred/snapshot.totalBytes ) * 100;
+            console.log("%:", porcentaje);
+        },
+
+        function error(err){
+
+        },
+
+        function complete(){ 
+          envio = true;
+          console.log("envio:",envio);
+          $('#fieldGood').modal('open');
+        }
+    );
+
+
+   // page('/curso');
+
+}
+
+function actualizarInfo(FBRefaux,name, type,date,img,description){ 
+   var aux= FBRefaux.update({
     name: name,
     type: type,
     date: date,
     img: img,
     description: description
     });
-    console.log('Guardado');
+    console.log('Actualizado');
     $('#fieldGood').modal('open');
-
-    var cursoKeyAux = aux.getKey();
-    console.log("push key:", cursoKeyAux);
-
-    //window.open("curso?curso="+cursoKeyAux,"_self");
-    sessionStorage.setItem("curso", "cursoKeyAux");
     page('/curso');
 }
 
@@ -223,6 +365,11 @@ function datapickerInit(){
         labelMonthSelect: 'Selecciona un mes',
         labelYearSelect: 'Selecciona un año',
     });
+}
+function EventGood(event){
+    event.preventDefault();
+    location.reload();
+    console.log('good');
 }
 
 
