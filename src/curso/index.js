@@ -13,6 +13,7 @@ var FBRef;
 var cursoKey ;
 
 var imagenName = "";
+var downloadURL = "";
 
 var file = null;
 
@@ -135,7 +136,7 @@ function loadNewCurse(){
   var content = document.getElementById('addPhoto');
   var templateNewCurso = require('./newCurso');
 
-  empty(content).appendChild(templateNewCurso("image1.png", 'Nombre','Tipo','Fecha','Descripción','btnSave','Guardado')); 
+  empty(content).appendChild(templateNewCurso(null, 'Nombre','Tipo','Fecha','Descripción','btnSave','Guardado')); 
   btnActios();
 }
 
@@ -154,7 +155,7 @@ function loadCurse(cursoKey){
                                 console.log('Datos then:',datos);
                                  var content = document.getElementById('addPhoto');
                                  var templateNewCurso = require('./newCurso');
-                                 empty(content).appendChild(templateNewCurso("image1.png", datos.name,datos.type,datos.date,datos.description,'btnUpdate','Actualizar'));
+                                 empty(content).appendChild(templateNewCurso(datos.img, datos.name,datos.type,datos.date,datos.description,'btnUpdate','Actualizar'));
                                  return true;
                               }
                             })
@@ -287,25 +288,9 @@ function btnSave2(){
 
 
 function guardarInfo(FBRefaux,name, type,date,imgName,description){ 
-   var aux= FBRefaux.push({
-    name: name,
-    type: type,
-    date: date,
-    img: null,
-    description: description
-    });
-   
-    console.log('Guardado');
-   
-
    
     imgName = Math.floor((Math.random() * 100000000) + 1) + '_' + imgName ;
     console.log('imgName',imgName);
-
-    $('#fieldGood').modal('open');
-    var cursoKeyAux = aux.getKey();
-    console.log("push key:", cursoKeyAux);
-    sessionStorage.setItem("curso", "cursoKeyAux");
 
     var storageRef = firebase.storage().ref('cursos/' + imgName);
 
@@ -325,15 +310,26 @@ function guardarInfo(FBRefaux,name, type,date,imgName,description){
         },
 
         function complete(){ 
-          envio = true;
-          console.log("envio:",envio);
+          downloadURL = task.snapshot.downloadURL;
+          
+          var aux= FBRefaux.push({
+          name: name,
+          type: type,
+          date: date,
+          img: downloadURL,
+          description: description
+          });
+         
+          console.log('Guardado');
+         
           $('#fieldGood').modal('open');
+          var cursoKeyAux = aux.getKey();
+          console.log("push key:", cursoKeyAux);
+          sessionStorage.setItem("curso", "cursoKeyAux");
+
         }
     );
-
-
    // page('/curso');
-
 }
 
 function actualizarInfo(FBRefaux,name, type,date,img,description){ 

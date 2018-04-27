@@ -13816,6 +13816,7 @@ var FBRef;
 var cursoKey;
 
 var imagenName = "";
+var downloadURL = "";
 
 var file = null;
 
@@ -13926,7 +13927,7 @@ function loadNewCurse() {
   var content = document.getElementById('addPhoto');
   var templateNewCurso = require('./newCurso');
 
-  empty(content).appendChild(templateNewCurso("image1.png", 'Nombre', 'Tipo', 'Fecha', 'Descripción', 'btnSave', 'Guardado'));
+  empty(content).appendChild(templateNewCurso(null, 'Nombre', 'Tipo', 'Fecha', 'Descripción', 'btnSave', 'Guardado'));
   btnActios();
 }
 
@@ -13941,7 +13942,7 @@ function loadCurse(cursoKey) {
       console.log('Datos then:', datos);
       var content = document.getElementById('addPhoto');
       var templateNewCurso = require('./newCurso');
-      empty(content).appendChild(templateNewCurso("image1.png", datos.name, datos.type, datos.date, datos.description, 'btnUpdate', 'Actualizar'));
+      empty(content).appendChild(templateNewCurso(datos.img, datos.name, datos.type, datos.date, datos.description, 'btnUpdate', 'Actualizar'));
       return true;
     }
   }).then(function (dato) {
@@ -14063,23 +14064,9 @@ function btnSave2() {
 }
 
 function guardarInfo(FBRefaux, name, type, date, imgName, description) {
-  var aux = FBRefaux.push({
-    name: name,
-    type: type,
-    date: date,
-    img: null,
-    description: description
-  });
-
-  console.log('Guardado');
 
   imgName = Math.floor(Math.random() * 100000000 + 1) + '_' + imgName;
   console.log('imgName', imgName);
-
-  $('#fieldGood').modal('open');
-  var cursoKeyAux = aux.getKey();
-  console.log("push key:", cursoKeyAux);
-  sessionStorage.setItem("curso", "cursoKeyAux");
 
   var storageRef = firebase.storage().ref('cursos/' + imgName);
 
@@ -14091,11 +14078,23 @@ function guardarInfo(FBRefaux, name, type, date, imgName, description) {
     var porcentaje = snapshot.bytesTransferred / snapshot.totalBytes * 100;
     console.log("%:", porcentaje);
   }, function error(err) {}, function complete() {
-    envio = true;
-    console.log("envio:", envio);
-    $('#fieldGood').modal('open');
-  });
+    downloadURL = task.snapshot.downloadURL;
 
+    var aux = FBRefaux.push({
+      name: name,
+      type: type,
+      date: date,
+      img: downloadURL,
+      description: description
+    });
+
+    console.log('Guardado');
+
+    $('#fieldGood').modal('open');
+    var cursoKeyAux = aux.getKey();
+    console.log("push key:", cursoKeyAux);
+    sessionStorage.setItem("curso", "cursoKeyAux");
+  });
   // page('/curso');
 }
 
@@ -14138,7 +14137,7 @@ function EventGood(event) {
 },{"../home/footer":23,"./header":17,"./newCurso":19,"dropify/dist/js/dropify.js":3,"empty-element":4,"page":13,"yo-yo":15}],19:[function(require,module,exports){
 "use strict";
 
-var _templateObject = _taggedTemplateLiteral(["\n  \t\t<div class=\"row \" style=\"padding-top:80px; padding-left:20px; padding-right:20px;\">\n\t    \t<div class=\"col s12 hide-on-med-and-up\">\n\t          <div class=\"card\">\n\t            <div class=\"card-image\">\n\t              <img src=", ">\n\t            </div>\n\t            <div class=\"card-content\">\n\t              <div class=\"row\">\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"last_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"last_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"type_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"type_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"date_name\" type=\"text\" class=\"datepicker\">\n\t                    <label for=\"date_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"description_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"description_name\">", "</label>\n\t                  </div>\n\t              </div>\n\t              <div class=\"card-action center-align\">\n\t                <a id=", " class=\"waves-effect waves-light btn\">", "</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class=\"col s12 center-align \">\n\t          <div class=\"card horizontal  hide-on-small-only\">\n\t            <div class=\"card-image \">\n\t             <input type=\"file\" id=\"input2\" class=\"dropify\">\n\t            </div>\n\t            <div class=\"card-stacked\">\n\t              <div class=\"card-content\">\n\t                <form class=\"col s12\">\n\t                  <div class=\"row\">\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"last_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"last_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col  m4 l6\">\n\t                      <input id=\"type_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"type_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"date_name2\" type=\"text\" class=\"datepicker\">\n\t                      <label for=\"date_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m12 l6\">\n\t                      <input id=\"description_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"description_name\">", "</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class=\"card-action\">\n\t                <a  id=", "  class=\"waves-effect waves-light btn\" >", "</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id=\"fieldNone\" class=\"modal\">\n\t          \t<p style=\"text-align: center;\">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id=\"fieldGood\" class=\"modal\">\n\t\t        <p style=\"font-weight: bolder; text-align: center;\">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t"], ["\n  \t\t<div class=\"row \" style=\"padding-top:80px; padding-left:20px; padding-right:20px;\">\n\t    \t<div class=\"col s12 hide-on-med-and-up\">\n\t          <div class=\"card\">\n\t            <div class=\"card-image\">\n\t              <img src=", ">\n\t            </div>\n\t            <div class=\"card-content\">\n\t              <div class=\"row\">\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"last_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"last_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"type_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"type_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"date_name\" type=\"text\" class=\"datepicker\">\n\t                    <label for=\"date_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"description_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"description_name\">", "</label>\n\t                  </div>\n\t              </div>\n\t              <div class=\"card-action center-align\">\n\t                <a id=", " class=\"waves-effect waves-light btn\">", "</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class=\"col s12 center-align \">\n\t          <div class=\"card horizontal  hide-on-small-only\">\n\t            <div class=\"card-image \">\n\t             <input type=\"file\" id=\"input2\" class=\"dropify\">\n\t            </div>\n\t            <div class=\"card-stacked\">\n\t              <div class=\"card-content\">\n\t                <form class=\"col s12\">\n\t                  <div class=\"row\">\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"last_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"last_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col  m4 l6\">\n\t                      <input id=\"type_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"type_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"date_name2\" type=\"text\" class=\"datepicker\">\n\t                      <label for=\"date_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m12 l6\">\n\t                      <input id=\"description_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"description_name\">", "</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class=\"card-action\">\n\t                <a  id=", "  class=\"waves-effect waves-light btn\" >", "</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id=\"fieldNone\" class=\"modal\">\n\t          \t<p style=\"text-align: center;\">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id=\"fieldGood\" class=\"modal\">\n\t\t        <p style=\"font-weight: bolder; text-align: center;\">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t"]);
+var _templateObject = _taggedTemplateLiteral(["\n  \t\t<div class=\"row \" style=\"padding-top:80px; padding-left:20px; padding-right:20px;\">\n\t    \t<div class=\"col s12 hide-on-med-and-up\">\n\t          <div class=\"card\">\n\t            <div class=\"card-image\">\n\t              <img src=", ">\n\t            </div>\n\t            <div class=\"card-content\">\n\t              <div class=\"row\">\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"last_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"last_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"type_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"type_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"date_name\" type=\"text\" class=\"datepicker\">\n\t                    <label for=\"date_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"description_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"description_name\">", "</label>\n\t                  </div>\n\t              </div>\n\t              <div class=\"card-action center-align\">\n\t                <a id=", " class=\"waves-effect waves-light btn\">", "</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class=\"col s12 center-align \">\n\t          <div class=\"card horizontal  hide-on-small-only\">\n\t            <div class=\"card-image \">\n\n\t             <input type=\"file\" id=\"input2\" class=\"dropify\" data-height=\"300\" data-width=\"300\">\n\t            </div>\n\t            <div class=\"card-stacked\">\n\t              <div class=\"card-content\">\n\t              \t<img src=", " width=100px>\n\t                <form class=\"col s12\">\n\t                  <div class=\"row\">\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"last_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"last_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col  m4 l6\">\n\t                      <input id=\"type_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"type_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"date_name2\" type=\"text\" class=\"datepicker\">\n\t                      <label for=\"date_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m12 l6\">\n\t                      <input id=\"description_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"description_name\">", "</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class=\"card-action\">\n\t                <a  id=", "  class=\"waves-effect waves-light btn\" >", "</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id=\"fieldNone\" class=\"modal\">\n\t          \t<p style=\"text-align: center;\">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id=\"fieldGood\" class=\"modal\">\n\t\t        <p style=\"font-weight: bolder; text-align: center;\">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t"], ["\n  \t\t<div class=\"row \" style=\"padding-top:80px; padding-left:20px; padding-right:20px;\">\n\t    \t<div class=\"col s12 hide-on-med-and-up\">\n\t          <div class=\"card\">\n\t            <div class=\"card-image\">\n\t              <img src=", ">\n\t            </div>\n\t            <div class=\"card-content\">\n\t              <div class=\"row\">\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"last_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"last_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"type_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"type_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col s12\">\n\t                    <input id=\"date_name\" type=\"text\" class=\"datepicker\">\n\t                    <label for=\"date_name\">", "</label>\n\t                  </div>\n\t                  <div class=\"input-field col  s12\">\n\t                    <input id=\"description_name\" type=\"text\" class=\"validate\">\n\t                    <label for=\"description_name\">", "</label>\n\t                  </div>\n\t              </div>\n\t              <div class=\"card-action center-align\">\n\t                <a id=", " class=\"waves-effect waves-light btn\">", "</a>\n\t              </div>\n\t            </div>    \n\t          </div>\n\t        </div>\n\n\t         <div class=\"col s12 center-align \">\n\t          <div class=\"card horizontal  hide-on-small-only\">\n\t            <div class=\"card-image \">\n\n\t             <input type=\"file\" id=\"input2\" class=\"dropify\" data-height=\"300\" data-width=\"300\">\n\t            </div>\n\t            <div class=\"card-stacked\">\n\t              <div class=\"card-content\">\n\t              \t<img src=", " width=100px>\n\t                <form class=\"col s12\">\n\t                  <div class=\"row\">\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"last_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"last_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col  m4 l6\">\n\t                      <input id=\"type_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"type_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m4 l6\">\n\t                      <input id=\"date_name2\" type=\"text\" class=\"datepicker\">\n\t                      <label for=\"date_name\">", "</label>\n\t                    </div>\n\t                    <div class=\"input-field col m12 l6\">\n\t                      <input id=\"description_name2\" type=\"text\" class=\"validate\">\n\t                      <label for=\"description_name\">", "</label>\n\t                    </div>\n\t                  </div>\n\t                </form>\n\t              </div>\n\t              <div class=\"card-action\">\n\t                <a  id=", "  class=\"waves-effect waves-light btn\" >", "</a>\n\t              </div>\n\t            </div>\n\t          </div>\n\t        </div>    \n\t        <div id=\"fieldNone\" class=\"modal\">\n\t          \t<p style=\"text-align: center;\">Estimado Debes Ingresar Todos los Campos.</p>\n\t\t    </div>\n\t\t    <div id=\"fieldGood\" class=\"modal\">\n\t\t        <p style=\"font-weight: bolder; text-align: center;\">Dato Ingresado.</p>\n\t\t    </div>\n\n\t       \n     \t</div>\n\n  \n\n\t\t"]);
 
 function _taggedTemplateLiteral(strings, raw) {
 	return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
@@ -14148,7 +14147,13 @@ var yo = require('yo-yo');
 
 module.exports = function newCurso(img, name, type_name, date_name, description_name, id, btnName) {
 	var id2 = id + "2";
-	return yo(_templateObject, img, name, type_name, date_name, description_name, id, btnName, name, type_name, date_name, description_name, id2, btnName);
+	if (img == null) {
+		img = "";
+	} else {
+		//img = "https://definicion.de/wp-content/uploads/2013/11/raton.jpg";
+	}
+
+	return yo(_templateObject, img, name, type_name, date_name, description_name, id, btnName, img, name, type_name, date_name, description_name, id2, btnName);
 };
 
 },{"yo-yo":15}],20:[function(require,module,exports){

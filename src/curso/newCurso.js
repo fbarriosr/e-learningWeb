@@ -2,6 +2,12 @@ var yo = require('yo-yo');
 
 module.exports = function newCurso(img,name,type_name,date_name,description_name,id,btnName){
 var id2 = id +"2";
+if (img == null) {
+	img = "";
+}else {
+   //img = "https://definicion.de/wp-content/uploads/2013/11/raton.jpg";
+}
+
   	return yo`
   		<div class="row " style="padding-top:80px; padding-left:20px; padding-right:20px;">
 	    	<div class="col s12 hide-on-med-and-up">
@@ -38,10 +44,12 @@ var id2 = id +"2";
 	         <div class="col s12 center-align ">
 	          <div class="card horizontal  hide-on-small-only">
 	            <div class="card-image ">
-	             <input type="file" id="input2" class="dropify">
+
+	             <input type="file" id="input2" class="dropify" data-height="300" data-width="300">
 	            </div>
 	            <div class="card-stacked">
 	              <div class="card-content">
+	              	<img src=${img} width=100px>
 	                <form class="col s12">
 	                  <div class="row">
 	                    <div class="input-field col m4 l6">
